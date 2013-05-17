@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <title>phone-home sample</title>
+    <script type="text/javascript" src="json2.js"></script>
+    <script type="text/javascript" src="phone-home.js"></script>
+    <script type="text/javascript">
+        function demo() {
+            PhoneHome.PH.wrap(function() {
+                throw new SyntaxError("fool!");
+            });
+        }
+    </script>
+</head>
+<body>
+    <button onclick="demo();">Click me!</button>
+</body>
+</html>

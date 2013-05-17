@@ -16,7 +16,7 @@ class ErrorLogger extends ErrorListener {
 
   private def toLtsv(e: ErrorPayload): String = {
     val sb = new StringBuilder()
-    sb.append(s"app:${e.app}\turl:${e.url}\terror:${e.error}\tuserAgent:${e.userAgent}")
+    sb.append(s"app:${e.app}\turl:${e.url}\terror:${e.errorMessage}\tuserAgent:${e.userAgent}")
     for { m <- e.customFields; k <- m.keys } sb.append(s"\t${k}:${m(k)}") 
     sb.toString
   }
