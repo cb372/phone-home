@@ -9,9 +9,9 @@
 
 
  <appender name="ERRORS-FILE" class="ch.qos.logback.core.FileAppender">
-    <file>phonehome-errors.log</file>
+    <file>logs/phonehome-errors.log</file>
     <encoder>
-      <pattern>%msg%n</pattern>
+      <pattern>time:%d\t%msg%n</pattern>
     </encoder>
   </appender>
 
