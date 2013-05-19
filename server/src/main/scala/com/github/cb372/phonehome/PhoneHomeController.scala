@@ -8,22 +8,32 @@ import scala.util.control.Exception._
 import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
+import org.scalatra.CorsSupport
 
 class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
                           password: Option[String]) extends PhonehomeServerStack
-                                                    with JacksonJsonSupport {
-  
+                                                    with JacksonJsonSupport
+                                                    with CorsSupport {
+
   implicit val jsonFormats: Formats = DefaultFormats
 
   private val logger =  LoggerFactory.getLogger(getClass)
 
   before() {
     // check password, if it is defined
-    password map { p =>
-      if (request.getHeader("X-PhoneHome-Auth") != p) {
-        halt(403)
+    if (request.getMethod != "OPTIONS") {
+      password map { p =>
+        if (request.getHeader("X-PhoneHome-Auth") != p) {
+          halt(403)
+        }
       }
     }
+
+    //response.setHeader("Access-Control-Allow-Origin:", "*")
+  }
+
+  options("/*") {
+    response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))
   }
 
   private def processEvent[E](parseResult: Either[Throwable, E])(notification: (Timestamped[E], PhoneHomeEventListener) => Unit) = {
