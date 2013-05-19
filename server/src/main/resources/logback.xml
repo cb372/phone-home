@@ -18,7 +18,14 @@
   <appender name="MESSAGES-FILE" class="ch.qos.logback.core.FileAppender">
     <file>logs/phonehome-messages.log</file>
     <encoder>
-        <pattern>%msg%n</pattern>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="TIMINGS-FILE" class="ch.qos.logback.core.FileAppender">
+    <file>logs/phonehome-timings.log</file>
+    <encoder>
+      <pattern>%msg%n</pattern>
     </encoder>
   </appender>
 
@@ -28,6 +35,10 @@
 
   <logger name="messages" level="INFO" additivity="false">
     <appender-ref ref="MESSAGES-FILE" />
+  </logger>
+
+  <logger name="timings" level="INFO" additivity="false">
+    <appender-ref ref="TIMINGS-FILE" />
   </logger>
 
   <root level="info">

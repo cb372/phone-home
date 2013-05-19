@@ -7,17 +7,33 @@ case class Error(name: String,
                  file: Option[String],
                  line: Option[String])
 
-case class ErrorEvent(app: String,
-                      url: String,
-                      userAgent: String,
-                      error: Error,
-                      customFields: Option[Map[String, String]])
+case class Timing(network: Long,
+                  dom: Long,
+                  pageLoad: Long,
+                  total: Long)
 
-case class MessageEvent(app: String,
-                     url: String,
-                     userAgent: String,
-                     message: String,
-                     customFields: Option[Map[String, String]])
+abstract class Event(val app: String,
+                     val url: String,
+                     val userAgent: String,
+                     val customFields: Option[Map[String, String]])
+
+case class ErrorEvent(override val app: String,
+                      override val url: String,
+                      override val userAgent: String,
+                      error: Error,
+                      override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
+
+case class MessageEvent(override val app: String,
+                        override val url: String,
+                        override val userAgent: String,
+                        message: String,
+                        override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
+
+case class TimingEvent(override val app: String,
+                       override val url: String,
+                       override val userAgent: String,
+                       timing: Timing,
+                       override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
 
 case class Timestamped[T](time: DateTime, event: T)
 

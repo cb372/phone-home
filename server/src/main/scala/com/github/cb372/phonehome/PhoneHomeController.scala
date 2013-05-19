@@ -48,4 +48,9 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
     processEvent(parseResult) { case (event, listener) => listener.onMessage(event) }
   }
 
+  post("/timings") {
+    val parseResult = catching(classOf[Exception]).either(parsedBody.extract[TimingEvent])
+    processEvent(parseResult) { case (event, listener) => listener.onTiming(event) }
+  }
+
 }

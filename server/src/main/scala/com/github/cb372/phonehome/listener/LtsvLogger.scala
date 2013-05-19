@@ -23,6 +23,10 @@ class LtsvLogger extends PhoneHomeEventListener {
     messagesLogger.info(toLtsv(event))
   }
 
+  def onTiming(event: Timestamped[TimingEvent]) {
+    messagesLogger.info(toLtsv(event))
+  }
+
   private def toLtsv[T: LtsvFormat](e: T): String = {
     val sb = new StringBuilder()
 

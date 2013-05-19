@@ -6,6 +6,7 @@ import model._
 trait PhoneHomeEventListener {
   def onError(event: Timestamped[ErrorEvent])
   def onMessage(event: Timestamped[MessageEvent])
+  def onTiming(event: Timestamped[TimingEvent])
 }
 
 
