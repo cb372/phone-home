@@ -1,0 +1,4 @@
+* Run listeners asynchronously
+* Add support for navigation timing API
+* Write docs and comments
+* Tests
