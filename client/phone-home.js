@@ -27,7 +27,10 @@ if (typeof PhoneHome !== 'object') {
         }
 
         var _sendXHR = function(url, payload) {
-            xhr = new XMLHttpRequest();
+            if (window.XMLHttpRequest)
+                xhr = new XMLHttpRequest();
+            else
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
             xhr.open("POST", url, true);
             xhr.setRequestHeader("X-PhoneHome-Auth", _options.password);
             xhr.setRequestHeader("Content-Type", "application/json");
