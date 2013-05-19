@@ -6,6 +6,13 @@
     <script type="text/javascript" src="json2.js"></script>
     <script type="text/javascript" src="phone-home.js"></script>
     <script type="text/javascript">
+        PhoneHome.PH.init("http://localhost:8080/errors", {
+                app: "phone-home sample",
+                password: "sesame",
+                customFields: { "foo": "bar", "baz": "hoge" }
+            }        
+        );
+
         function demo() {
             PhoneHome.PH.wrap(function() {
                 throw new SyntaxError("fool!");

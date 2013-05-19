@@ -1,24 +1,19 @@
 package com.github.cb372.phonehome
 
-import models._
+import model._
+import listener._
 
 import scala.util.control.Exception._
 
-import org.scalatra._
-import scalate.ScalateSupport
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 
-class PhoneHomeController extends PhonehomeServerStack with JacksonJsonSupport {
+class PhoneHomeController(listeners: Seq[PhoneHomeEventListener]) extends PhonehomeServerStack with JacksonJsonSupport {
   
   implicit val jsonFormats: Formats = DefaultFormats
 
   val logger =  LoggerFactory.getLogger(getClass)
-
-  val listeners: Seq[ErrorListener] = Seq(
-    new ErrorLogger 
-  )
 
   before() {
     if (request.getHeader("X-PhoneHome-Auth") != "sesame") {
@@ -28,12 +23,13 @@ class PhoneHomeController extends PhonehomeServerStack with JacksonJsonSupport {
   
   post("/errors") {
     val parseResult = 
-      catching(classOf[Exception]).either(parsedBody.extract[ErrorPayload])     
+      catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
     parseResult fold ({ e =>
       logger.info(s"Rejecting invalid json: ${request.body}")
       halt(400)
-    }, { payload =>
-      listeners.map(_.onError(payload))
+    }, { event =>
+      // TODO do this asynchronously
+      listeners.map(_.onError(Timestamped(event)))
       "OK"
     })
   }
