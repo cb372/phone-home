@@ -10,6 +10,8 @@ class ScalatraBootstrap extends LifeCycle {
       new LtsvLogger
     )
 
-    context.mount(new PhoneHomeController(listeners), "/*")
+    val password = Some("sesame")
+
+    context.mount(new PhoneHomeController(listeners, password), "/*")
   }
 }

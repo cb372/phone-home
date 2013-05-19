@@ -9,40 +9,43 @@ import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 
-class PhoneHomeController(listeners: Seq[PhoneHomeEventListener]) extends PhonehomeServerStack with JacksonJsonSupport {
+class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
+                          password: Option[String]) extends PhonehomeServerStack
+                                                    with JacksonJsonSupport {
   
   implicit val jsonFormats: Formats = DefaultFormats
 
-  val logger =  LoggerFactory.getLogger(getClass)
+  private val logger =  LoggerFactory.getLogger(getClass)
 
   before() {
-    if (request.getHeader("X-PhoneHome-Auth") != "sesame") {
-      halt(403)
+    // check password, if it is defined
+    password map { p =>
+      if (request.getHeader("X-PhoneHome-Auth") != p) {
+        halt(403)
+      }
     }
   }
-  
-  post("/errors") {
-    val parseResult = catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
+
+  private def processEvent[E](parseResult: Either[Throwable, E])(notification: (Timestamped[E], PhoneHomeEventListener) => Unit) = {
     parseResult fold ({ e =>
       logger.info(s"Rejecting invalid json: ${request.body}")
       halt(400)
     }, { event =>
+      val timestamped = Timestamped(event)
       // TODO do this asynchronously
-      listeners.map(_.onError(Timestamped(event)))
+      listeners.map(notification(timestamped, _))
       "OK"
     })
+  }
+
+  post("/errors") {
+    val parseResult = catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
+    processEvent(parseResult) { case (event, listener) => listener.onError(event) }
   }
 
   post("/messages") {
     val parseResult = catching(classOf[Exception]).either(parsedBody.extract[MessageEvent])
-    parseResult fold ({ e =>
-      logger.info(s"Rejecting invalid json: ${request.body}")
-      halt(400)
-    }, { event =>
-    // TODO do this asynchronously
-      listeners.map(_.onMessage(Timestamped(event)))
-      "OK"
-    })
+    processEvent(parseResult) { case (event, listener) => listener.onMessage(event) }
   }
 
 }
