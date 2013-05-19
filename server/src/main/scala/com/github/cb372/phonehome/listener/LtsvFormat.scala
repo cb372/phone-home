@@ -61,7 +61,7 @@ object DefaultLtsvFormats {
 
   implicit object TimingLtsv extends LtsvFormat[Timing] {
     def appendLtsv(t: Timing, sb: StringBuilder) {
-      sb.append(s"networkTime:${t.network}\tdomTime:${t.dom}\tpageLoadTime:${t.pageLoad}\ttotalTime:${t.total}\t")
+      sb.append(s"networkTime:${t.network}\trequestResponseTime:${t.requestResponse}\tdomTime:${t.dom}\tpageLoadTime:${t.pageLoad}\ttotalTime:${t.total}\t")
     }
   }
 }

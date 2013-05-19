@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 class LtsvLogger extends PhoneHomeEventListener {
   val errorsLogger =  LoggerFactory.getLogger("errors")
   val messagesLogger =  LoggerFactory.getLogger("messages")
+  val timingsLogger =  LoggerFactory.getLogger("timings")
 
   import DefaultLtsvFormats._
 
@@ -24,7 +25,7 @@ class LtsvLogger extends PhoneHomeEventListener {
   }
 
   def onTiming(event: Timestamped[TimingEvent]) {
-    messagesLogger.info(toLtsv(event))
+    timingsLogger.info(toLtsv(event))
   }
 
   private def toLtsv[T: LtsvFormat](e: T): String = {

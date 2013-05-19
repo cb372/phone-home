@@ -8,6 +8,7 @@ case class Error(name: String,
                  line: Option[String])
 
 case class Timing(network: Long,
+                  requestResponse: Long,
                   dom: Long,
                   pageLoad: Long,
                   total: Long)

@@ -25,10 +25,15 @@
             var msgText = document.getElementById('msg').value;
             PhoneHome.sendMessage(msgText);
         }
+
+        function sendTiming() {
+            PhoneHome.sendTiming();
+        }
     </script>
 </head>
 <body>
     <div>Throw an exception: <button onclick="wrapAndSendError();">Click me!</button></div>
     <div>Send a message: <input id="msg" value="Hello!" /> <button onclick="sendMsg();">Click me!</button></div>
+    <div>Send timing info: <button onclick="sendTiming();">Click me!</button></div>
 </body>
 </html>

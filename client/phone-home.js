@@ -10,6 +10,14 @@ if (typeof PhoneHome !== 'object') {
 
         var _serverUrl = "http://example.com/";
 
+        var _debugLog = function(e) {
+            try {
+                if (console && console.debug) {
+                    console.debug(e);
+                }
+            } catch (err) { }
+        };
+
         var _ensureTrailingSlash = function(url) {
             if (url[url.length - 1] == '/')
                 return url;
@@ -24,7 +32,7 @@ if (typeof PhoneHome !== 'object') {
                 userAgent: navigator.userAgent,
                 customFields: _options.customFields // may or may not be defined
             };
-        }
+        };
 
         var _sendXHR = function(url, payload) {
             if (window.XMLHttpRequest)
@@ -47,7 +55,9 @@ if (typeof PhoneHome !== 'object') {
                     line: e.lineNumber, // FF only
                 };
                 _sendXHR(_serverUrl + "errors", payload)
-            } catch(e) { }
+            } catch(e) { 
+                _debugLog(e);
+            }
         };
 
         var _sendMessage = function(message) {
@@ -55,7 +65,28 @@ if (typeof PhoneHome !== 'object') {
                 var payload = _buildCommonPayload();
                 payload.message = message;
                 _sendXHR(_serverUrl + "messages", payload)
-            } catch(e) { }
+            } catch(e) { 
+                _debugLog(e);
+            }
+        };
+
+        var _sendTiming = function() {
+            try {
+                if (window.performance) {
+                    var t = window.performance.timing;
+                    var payload = _buildCommonPayload();
+                    payload.timing = {
+                        network: t.responseEnd - t.fetchStart,
+                        requestResponse: t.responseEnd - t.requestStart,
+                        dom: t.domComplete - t.domLoading,
+                        pageLoad: t.loadEventEnd - t.responseEnd,
+                        total: t.loadEventEnd - t.navigationStart
+                    };
+                    _sendXHR(_serverUrl + "timings", payload)
+                }
+            } catch(e) {
+                _debugLog(e);
+            }
         };
 
         return {
@@ -83,6 +114,10 @@ if (typeof PhoneHome !== 'object') {
 
             sendMessage: function(message) {
                 _sendMessage(message);
+            },
+
+            sendTiming: function() {
+                _sendTiming();
             }
         }
     })();
