@@ -6,7 +6,7 @@
     <script type="text/javascript" src="json2.js"></script>
     <script type="text/javascript" src="phone-home.js"></script>
     <script type="text/javascript">
-        PhoneHome.PH.init("http://localhost:8080/", {
+        PhoneHome.init("http://localhost:8080/", {
                 app: "phone-home sample",
                 password: "sesame",
                 customFields: { "foo": "bar", "baz": "hoge" }
@@ -18,12 +18,12 @@
         }
 
         function wrapAndSendError() {
-            PhoneHome.PH.wrap(riskyFunction);
+            PhoneHome.wrap(riskyFunction);
         }
 
         function sendMsg() {
             var msgText = document.getElementById('msg').value;
-            PhoneHome.PH.sendMessage(msgText);
+            PhoneHome.sendMessage(msgText);
         }
     </script>
 </head>
