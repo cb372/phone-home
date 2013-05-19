@@ -8,15 +8,26 @@
   </appender>
 
 
- <appender name="ERRORS-FILE" class="ch.qos.logback.core.FileAppender">
+  <appender name="ERRORS-FILE" class="ch.qos.logback.core.FileAppender">
     <file>logs/phonehome-errors.log</file>
     <encoder>
       <pattern>%msg%n</pattern>
     </encoder>
   </appender>
 
+  <appender name="MESSAGES-FILE" class="ch.qos.logback.core.FileAppender">
+    <file>logs/phonehome-messages.log</file>
+    <encoder>
+        <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
   <logger name="errors" level="INFO" additivity="false">
     <appender-ref ref="ERRORS-FILE" />
+  </logger>
+
+  <logger name="messages" level="INFO" additivity="false">
+    <appender-ref ref="MESSAGES-FILE" />
   </logger>
 
   <root level="info">

@@ -22,14 +22,25 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener]) extends Phoneh
   }
   
   post("/errors") {
-    val parseResult = 
-      catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
+    val parseResult = catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
     parseResult fold ({ e =>
       logger.info(s"Rejecting invalid json: ${request.body}")
       halt(400)
     }, { event =>
       // TODO do this asynchronously
       listeners.map(_.onError(Timestamped(event)))
+      "OK"
+    })
+  }
+
+  post("/messages") {
+    val parseResult = catching(classOf[Exception]).either(parsedBody.extract[MessageEvent])
+    parseResult fold ({ e =>
+      logger.info(s"Rejecting invalid json: ${request.body}")
+      halt(400)
+    }, { event =>
+    // TODO do this asynchronously
+      listeners.map(_.onMessage(Timestamped(event)))
       "OK"
     })
   }

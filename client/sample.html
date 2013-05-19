@@ -6,21 +6,29 @@
     <script type="text/javascript" src="json2.js"></script>
     <script type="text/javascript" src="phone-home.js"></script>
     <script type="text/javascript">
-        PhoneHome.PH.init("http://localhost:8080/errors", {
+        PhoneHome.PH.init("http://localhost:8080/", {
                 app: "phone-home sample",
                 password: "sesame",
                 customFields: { "foo": "bar", "baz": "hoge" }
             }        
         );
 
-        function demo() {
-            PhoneHome.PH.wrap(function() {
-                throw new SyntaxError("fool!");
-            });
+        function riskyFunction() {
+            throw new SyntaxError("fool!");
+        }
+
+        function wrapAndSendError() {
+            PhoneHome.PH.wrap(riskyFunction);
+        }
+
+        function sendMsg() {
+            var msgText = document.getElementById('msg').value;
+            PhoneHome.PH.sendMessage(msgText);
         }
     </script>
 </head>
 <body>
-    <button onclick="demo();">Click me!</button>
+    <div>Throw an exception: <button onclick="wrapAndSendError();">Click me!</button></div>
+    <div>Send a message: <input id="msg" value="Hello!" /> <button onclick="sendMsg();">Click me!</button></div>
 </body>
 </html>

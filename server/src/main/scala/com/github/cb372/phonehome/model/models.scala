@@ -8,10 +8,16 @@ case class Error(name: String,
                  line: Option[String])
 
 case class ErrorEvent(app: String,
-                        url: String, 
-                        userAgent: String,
-                        error: Error,
-                        customFields: Option[Map[String, String]])
+                      url: String,
+                      userAgent: String,
+                      error: Error,
+                      customFields: Option[Map[String, String]])
+
+case class MessageEvent(app: String,
+                     url: String,
+                     userAgent: String,
+                     message: String,
+                     customFields: Option[Map[String, String]])
 
 case class Timestamped[T](time: DateTime, event: T)
 

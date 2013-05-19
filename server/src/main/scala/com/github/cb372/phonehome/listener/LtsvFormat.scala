@@ -35,5 +35,11 @@ object DefaultLtsvFormats {
     }
   }
 
+  implicit object MessageEventLtsv extends LtsvFormat[MessageEvent] {
+    def appendLtsv(e: MessageEvent, sb: StringBuilder) {
+      sb.append(s"app:${e.app}\turl:${e.url}\tuserAgent:${e.userAgent}\tmessage:${e.message}\t")
+      for { m <- e.customFields; k <- m.keys } sb.append(s"$k:${m(k)}\t")
+    }
+  }
 }
 
