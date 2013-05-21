@@ -3,3 +3,4 @@
 * Tests
 * More interesting listeners
 * Simple GUI - last 100 errors, etc.
+* Set up sbt to copy client/*.js to server/src/main/webapp/js

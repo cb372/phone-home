@@ -12,6 +12,7 @@ class ScalatraBootstrap extends LifeCycle {
 
     val password = Some("sesame")
 
-    context.mount(new PhoneHomeController(listeners, password), "/*")
+    context.mount(new StaticResourcesController, "/*")
+    context.mount(new PhoneHomeController(listeners, password), "/ph/*")
   }
 }
