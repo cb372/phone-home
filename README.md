@@ -30,7 +30,25 @@ The client is a Javascript library designed to be embedded into the pages of you
 
 #### Initialization
 
-TODO
+Add links to the Javascript files in your `&lt;head&gt;` section:
+
+    <script type="text/javascript" src="/javascripts/json2.js"></script>
+    <script type="text/javascript" src="/javascripts/phone-home.js"></script>
+
+This will add a `PhoneHome` object to the global namespace.
+
+Before we can use the `PhoneHome` object, we need to initialize it. Pass the URL of the PhoneHome server, along with any other configuration options.
+
+    <script type="text/javascript">
+        PhoneHome.init("http://phone-home-server:8080/", {
+                app: "my amazing app",
+                password: "not-so-secret",
+                customFields: { "foo": "bar", "baz": "hoge" }
+            }        
+        );
+    </script>
+
+Configuration options: TODO
 
 #### Sending error reports
 
