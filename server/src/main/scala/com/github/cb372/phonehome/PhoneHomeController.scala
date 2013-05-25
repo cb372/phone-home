@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.scalatra.CorsSupport
+import scala.concurrent.{future, ExecutionContext}
 
 class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
-                          authString: Option[String]) extends PhonehomeServerStack
+                          authString: Option[String])
+                         (implicit ec: ExecutionContext)
+                                                    extends PhonehomeServerStack
                                                     with JacksonJsonSupport
                                                     with CorsSupport {
 
@@ -42,8 +45,8 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
       halt(400)
     }, { event =>
       val timestamped = Timestamped(event)
-      // TODO do this asynchronously
-      listeners.map(notification(timestamped, _))
+      // notify listeners asynchronously
+      listeners.map { l => future { notification(timestamped, l) } }
       "OK"
     })
   }

@@ -1,4 +1,3 @@
-* Run listeners asynchronously
 * Write docs and comments
 * Tests
 * More interesting listeners
