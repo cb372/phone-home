@@ -4,7 +4,8 @@ if (typeof PhoneHome !== 'object') {
         // private
         var _options = { 
             app: "(unspecified)",
-            password: "not so secret",
+            authString: "not so secret",
+            customFields: {},
             swallowErrors: true
         };
 
@@ -30,7 +31,7 @@ if (typeof PhoneHome !== 'object') {
                 app: _options.app,
                 url: document.URL,
                 userAgent: navigator.userAgent,
-                customFields: _options.customFields // may or may not be defined
+                customFields: _options.customFields
             };
         };
 
@@ -40,7 +41,7 @@ if (typeof PhoneHome !== 'object') {
             else
                 xhr = new ActiveXObject("Microsoft.XMLHTTP");
             xhr.open("POST", url, true);
-            xhr.setRequestHeader("X-PhoneHome-Auth", _options.password);
+            xhr.setRequestHeader("X-PhoneHome-Auth", _options.authString);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(JSON.stringify(payload));
         };

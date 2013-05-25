@@ -30,7 +30,7 @@ The client is a Javascript library designed to be embedded into the pages of you
 
 #### Initialization
 
-Add links to the Javascript files in your `&lt;head&gt;` section:
+Add links to the Javascript files in your `<head>` section:
 
     <script type="text/javascript" src="/javascripts/json2.js"></script>
     <script type="text/javascript" src="/javascripts/phone-home.js"></script>
@@ -42,22 +42,76 @@ Before we can use the `PhoneHome` object, we need to initialize it. Pass the URL
     <script type="text/javascript">
         PhoneHome.init("http://phone-home-server:8080/", {
                 app: "my amazing app",
-                password: "not-so-secret",
-                customFields: { "foo": "bar", "baz": "hoge" }
+                authString: "sesame",
+                customFields: { "foo": "bar", "baz": "hoge" },
+                swallowErrors: false
             }        
         );
     </script>
 
-Configuration options: TODO
+Configuration options:
+
+<table>
+  <tr><th>Key</th><th>Default value</th><th>Description</th></tr>
+  <tr><td>app</td><td>"(unspecified)"</td><td>A human-readable identifier for your application. Useful when you have multiple apps posting data to the same PhoneHome server.</td></tr>
+  <tr><td>authString</td><td>"not so secret"</td><td>A string that is passed as an HTTP header with all POST requests to the PhoneHome server. If you set an authString on the server side, this should be set to the same value.</td></tr>
+  <tr><td>customFields</td><td>`{}`</td><td>A hash of any other useful information that you want to include. Every time a message is posted to the PhoneHome server, these fields will be included.</td></tr>
+  <tr><td>swallowErrors</td><td>true</td><td>After an exception is caught and sent to the PhoneHome server, should it be swallowed or not. If this is set to false, the exception will be rethrown.</td></tr>
+</table>
 
 #### Sending error reports
 
-TODO
+Say you have some Javascript that may throw an exception:
+
+    <script type="text/javascript">
+        for (i=0; i<100; i++) {
+            doSomethingRisky();
+        }
+    </script>
+
+Of course, you don't *think* it'll throw any exceptions... but you just never know, especially when this code will have to run on dozens of different versions of IE, FireFox, Chrome, Safari and smartphone browsers.
+
+Simply wrap this code in `PhoneHome.wrap()` and any exceptions will be caught and posted to the PhoneHome server as JSON, along with the URL being accessed, the user agent and various other useful debugging information.
+
+    <script type="text/javascript">
+        PhoneHome.wrap(function() {
+            for (i=0; i<100; i++) {
+                doSomethingRisky();
+            }
+        });
+    </script>
 
 #### Sending timing info
 
-TODO
+Call `PhoneHome.sendTiming()` to send information on how long the page took to load.
+
+The following timings are included:
+
+<table>
+  <tr><th>Field</th><th>Meaning</th></tr>
+  <tr><td>network</td><td>All network time, including DNS, TCP connection and HTTP request and response</td></tr>
+  <tr><td>requestResponse</td><td>Time from starting the HTTP request to the end of the HTTP response</td></tr>
+  <tr><td>dom</td><td>Time spent loading the DOM</td></tr>
+  <tr><td>pageLoad</td><td>All time spent rendering the page, including loading the DOM</td></tr>
+  <tr><td>total</td><td>Absolutely everything, from the user clicking a link the page being completely loaded</td></tr>
+</table>
+
+Note that some browsers (e.g. Safari) do not yet support the Navigation Timing API. In this case, the `sendTiming()` method will simply do nothing.
+
+Of course, you should call `sendTiming()` after page load has completed. If you're using jQuery, wrap the call in a `document.ready()`:
+
+    $(function() { PhoneHome.sendTiming(); });
+
+If you prefer to do things old-skool, use an `onLoad()` event:
+
+    window.onload = function() {
+        setTimeout(function() { 
+            PhoneHome.sendTiming(); 
+        }, 0);
+    }
 
 #### Sending arbitrary messages
 
-TODO
+`PhoneHome` has a `sendMessage` method that you can use to send arbitrary log messages to the server:
+
+    PhoneHome.sendMessage("Everything looks good!");

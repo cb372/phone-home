@@ -6,9 +6,9 @@
     <script type="text/javascript" src="js/json2.js"></script>
     <script type="text/javascript" src="js/phone-home.js"></script>
     <script type="text/javascript">
-        PhoneHome.init("http://localhost:8080/", {
+        PhoneHome.init("/", {
                 app: "phone-home sample",
-                password: "sesame",
+                authString: "not so secret",
                 customFields: { "foo": "bar", "baz": "hoge" }
             }        
         );

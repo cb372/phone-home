@@ -11,7 +11,7 @@ import org.scalatra.json._
 import org.scalatra.CorsSupport
 
 class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
-                          password: Option[String]) extends PhonehomeServerStack
+                          authString: Option[String]) extends PhonehomeServerStack
                                                     with JacksonJsonSupport
                                                     with CorsSupport {
 
@@ -20,16 +20,16 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
   private val logger =  LoggerFactory.getLogger(getClass)
 
   before() {
-    // check password, if it is defined
+    // check auth string, if it is defined
     if (request.getMethod != "OPTIONS") {
-      password map { p =>
-        if (request.getHeader("X-PhoneHome-Auth") != p) {
+      authString map { a =>
+        if (request.getHeader("X-PhoneHome-Auth") != a) {
           halt(403)
         }
       }
     }
 
-    //response.setHeader("Access-Control-Allow-Origin:", "*")
+    response.setHeader("Access-Control-Allow-Origin:", "*")
   }
 
   options("/*") {
