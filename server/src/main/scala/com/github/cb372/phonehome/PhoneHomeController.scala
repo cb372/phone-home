@@ -8,13 +8,13 @@ import scala.util.control.Exception._
 import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
-import org.scalatra.CorsSupport
+import org.scalatra.{ScalatraServlet, CorsSupport}
 import scala.concurrent.{future, ExecutionContext}
 
 class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
                           authString: Option[String])
                          (implicit ec: ExecutionContext)
-                                                    extends PhonehomeServerStack
+                                                    extends ScalatraServlet
                                                     with JacksonJsonSupport
                                                     with CorsSupport {
 
