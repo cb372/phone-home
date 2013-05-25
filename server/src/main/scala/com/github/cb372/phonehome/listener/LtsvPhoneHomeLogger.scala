@@ -4,12 +4,13 @@ package listener
 import model._
 
 import org.slf4j.LoggerFactory
+import com.github.cb372.phonehome.ltsv.{LtsvBuilder, DefaultLtsvFormats, LtsvFormat}
 
 /**
  * Author: chris
  * Created: 5/19/13
  */
-class LtsvLogger extends PhoneHomeEventListener {
+class LtsvPhoneHomeLogger extends PhoneHomeEventListener with LtsvBuilder {
   val errorsLogger =  LoggerFactory.getLogger("errors")
   val messagesLogger =  LoggerFactory.getLogger("messages")
   val timingsLogger =  LoggerFactory.getLogger("timings")
@@ -28,18 +29,6 @@ class LtsvLogger extends PhoneHomeEventListener {
     timingsLogger.info(toLtsv(event))
   }
 
-  private def toLtsv[T: LtsvFormat](e: T): String = {
-    val sb = new StringBuilder()
-
-    // serialize to LTSV
-    implicitly[LtsvFormat[T]].appendLtsv(e, sb)
-
-    // Remove trailing tab, in order to produce valid LTSV
-    if (sb.last == '\t')
-      sb.deleteCharAt(sb.length - 1)
-
-    sb.toString()
-  }
 }
 
 
