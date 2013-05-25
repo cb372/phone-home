@@ -7,6 +7,8 @@ Phone Home allows you to collect the following information from your users' brow
 * Exception reports (type of exception, exception message, file and line number if supported by browser)
 * Timing information (if it is supported by the browser)
 * Arbitrary informational messages
+ 
+All messages will also include the browser's user agent, the URL of the current page, and any custom fields you want to add.
 
 ## How to use
 
@@ -55,7 +57,7 @@ Configuration options:
   <tr><th>Key</th><th>Default value</th><th>Description</th></tr>
   <tr><td>app</td><td>"(unspecified)"</td><td>A human-readable identifier for your application. Useful when you have multiple apps posting data to the same PhoneHome server.</td></tr>
   <tr><td>authString</td><td>"not so secret"</td><td>A string that is passed as an HTTP header with all POST requests to the PhoneHome server. If you set an authString on the server side, this should be set to the same value.</td></tr>
-  <tr><td>customFields</td><td>`{}`</td><td>A hash of any other useful information that you want to include. Every time a message is posted to the PhoneHome server, these fields will be included.</td></tr>
+  <tr><td>customFields</td><td>{} (empty hash)</td><td>A hash of any other useful information that you want to include. Every time a message is posted to the PhoneHome server, these fields will be included.</td></tr>
   <tr><td>swallowErrors</td><td>true</td><td>After an exception is caught and sent to the PhoneHome server, should it be swallowed or not. If this is set to false, the exception will be rethrown.</td></tr>
 </table>
 
