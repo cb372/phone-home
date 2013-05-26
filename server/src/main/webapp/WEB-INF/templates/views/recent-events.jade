@@ -1,0 +1,35 @@
+- import com.github.cb372.phonehome.model._
+-@ val errors: Seq[Timestamped[ErrorEvent]]
+-@ val timings: Seq[Timestamped[TimingEvent]]
+-@ val messages: Seq[Timestamped[MessageEvent]]
+- attributes("title") = "Recent events"
+
+h2 Errors
+table
+  tr
+    th Time
+    th Error
+  - for(e <- errors)
+    tr
+      td= e.time
+      td= e.event.error
+
+h2 Timings
+table
+  tr
+    th Time
+    th Total page load time (ms)
+  - for(t <- timings)
+    tr
+      td= t.time
+      td= t.event.timing.total
+
+h2 Messages
+table
+  tr
+    th Time
+    th Message
+  - for(m <- messages)
+    tr
+      td= m.time
+      td= m.event.message

@@ -5,7 +5,19 @@ import org.joda.time.DateTime
 case class Error(name: String,
                  message: String,
                  file: Option[String],
-                 line: Option[String])
+                 line: Option[String]) {
+
+  val locationInfo: Option[String] = {
+    for {
+      f <- file
+      l <- line
+    } yield s" @ $f:$l"
+  }
+
+  override def toString: String = {
+    s"""$name: $message${locationInfo getOrElse ""}"""
+  }
+}
 
 case class Timing(network: Long,
                   requestResponse: Long,
