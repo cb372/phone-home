@@ -26,6 +26,8 @@ cd server
 
 TODO: document how to use sbt-start-script, how to run on Heroku
 
+Once the server is running, open http://localhost:8080/sample in your browser.
+
 ### Client
 
 The client is a Javascript library designed to be embedded into the pages of your site.
