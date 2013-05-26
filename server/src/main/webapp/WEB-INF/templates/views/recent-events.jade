@@ -4,32 +4,44 @@
 -@ val messages: Seq[Timestamped[MessageEvent]]
 - attributes("title") = "Recent events"
 
-h2 Errors
-table
-  tr
-    th Time
-    th Error
-  - for(e <- errors)
-    tr
-      td= e.time
-      td= e.event.error
+.tabbable
+  ul.nav.nav-tabs
+    li.active
+      a(href='#tab-errors' data-toggle='tab') Errors
+    li
+      a(href='#tab-timings' data-toggle='tab') Timings
+    li
+      a(href='#tab-messages' data-toggle='tab') Messages
 
-h2 Timings
-table
-  tr
-    th Time
-    th Total page load time (ms)
-  - for(t <- timings)
-    tr
-      td= t.time
-      td= t.event.timing.total
+  .tab-content
 
-h2 Messages
-table
-  tr
-    th Time
-    th Message
-  - for(m <- messages)
-    tr
-      td= m.time
-      td= m.event.message
+    .tab-pane.active(id='tab-errors')
+      table.table.table-striped
+        tr
+          th Time
+          th Error
+        - for(e <- errors)
+          tr
+            td= e.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= e.event.error
+
+    .tab-pane(id='tab-timings')
+      table.table.table-striped
+        tr
+          th Time
+          th Total page load time (ms)
+        - for(t <- timings)
+          tr
+            td= t.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= t.event.timing.total
+
+    .tab-pane(id='tab-messages')
+      table.table.table-striped
+        tr
+          th Time
+          th Message
+        - for(m <- messages)
+          tr
+            td= m.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= m.event.message
+

@@ -1,0 +1,49 @@
+- attributes("title") = "Client sample"
+
+script(type='text/javascript' src='/js/json2.js')
+script(type='text/javascript' src='js/phone-home.js')
+:javascript
+  PhoneHome.init("/", {
+          app: "phone-home sample",
+          authString: "not so secret",
+          customFields: { "foo": "bar", "baz": "hoge" }
+      }
+  );
+
+  function riskyFunction() {
+      throw new SyntaxError("fool!");
+  }
+
+  function wrapAndSendError() {
+      PhoneHome.wrap(riskyFunction);
+      return false;
+  }
+
+  function sendMsg() {
+      var msgText = document.getElementById('msg').value;
+      PhoneHome.sendMessage(msgText);
+      return false;
+  }
+
+  function sendTiming() {
+      PhoneHome.sendTiming();
+      return false;
+  }
+
+form.form-horizontal#sampleForm
+  .control-group
+    label.control-label(for='errorButton') Throw an exception:
+    .controls
+      button.btn#errorButton(onclick='wrapAndSendError();') Click me!
+  .control-group
+    label.control-label(for='messageButton') Send a message:
+    .controls
+      input#msg(value='Hello!')
+      button.btn#messageButton(onclick='sendMsg();') Click me!
+  .control-group
+    label.control-label(for='timingButton') Send timing info:
+    .controls
+      button.btn#timingButton(onclick='sendTiming();') Click me!
+
+:javascript
+  $('#sampleForm').submit(false);

@@ -2,11 +2,25 @@
 -@ val headline: String = title
 -@ val body: String
 
-!!!
-html
+!!! 5
+html(lang='en')
   head
     title= title
+    link(rel='stylesheet' href='/css/bootstrap.min.css')
+    script(type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+    script(type='text/javascript' src='/js/bootstrap.min.js')
   body
-    #content
-      h1= headline
-      != body
+    .navbar
+      .navbar-inner
+        .container
+          a.brand Phone Home
+          ul.nav
+            li
+              a(href='/sample') Client Sample
+            li
+              a(href='/recent') Recent events
+    .container
+      #content
+        .page-header
+          h1= headline
+        != body
