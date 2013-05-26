@@ -2,6 +2,8 @@
 
 A Javascript client and Scalatra server for collecting client-side errors and diagnostics.
 
+[LIVE DEMO](http://phone-home-demo.herokuapp.com/sample)
+
 Phone Home allows you to collect the following information from your users' browsers:
 
 * Exception reports (type of exception, exception message, file and line number if supported by browser)
