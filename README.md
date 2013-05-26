@@ -67,7 +67,7 @@ Configuration options:
 Say you have some Javascript that may throw an exception:
 
     <script type="text/javascript">
-        for (i=0; i<100; i++) {
+        for (var i=0; i<100; i++) {
             doSomethingRisky();
         }
     </script>
@@ -78,7 +78,7 @@ Simply wrap this code in `PhoneHome.wrap()` and any exceptions will be caught an
 
     <script type="text/javascript">
         PhoneHome.wrap(function() {
-            for (i=0; i<100; i++) {
+            for (var i=0; i<100; i++) {
                 doSomethingRisky();
             }
         });
