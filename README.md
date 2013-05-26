@@ -20,7 +20,6 @@ The following commands will start a server on port 8080.
 
 ````
 git clone git://github.com/cb372/phone-home.git
-cd server
 ./sbt container:start
 ````
 
