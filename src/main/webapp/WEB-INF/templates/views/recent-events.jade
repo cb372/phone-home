@@ -1,7 +1,7 @@
 - import com.github.cb372.phonehome.model._
--@ val errors: Seq[Timestamped[ErrorEvent]]
--@ val timings: Seq[Timestamped[TimingEvent]]
--@ val messages: Seq[Timestamped[MessageEvent]]
+-@ val errors: Seq[Received[ErrorEvent]]
+-@ val timings: Seq[Received[TimingEvent]]
+-@ val messages: Seq[Received[MessageEvent]]
 - attributes("title") = "Recent events"
 
 .tabbable
@@ -19,29 +19,35 @@
       table.table.table-striped
         tr
           th Time
+          th Client address
           th Error
         - for(e <- errors)
           tr
             td= e.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= e.remoteHost
             td= e.event.error
 
     .tab-pane(id='tab-timings')
       table.table.table-striped
         tr
           th Time
+          th Client address
           th Total page load time (ms)
         - for(t <- timings)
           tr
             td= t.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= t.remoteHost
             td= t.event.timing.total
 
     .tab-pane(id='tab-messages')
       table.table.table-striped
         tr
           th Time
+          th Client address
           th Message
         - for(m <- messages)
           tr
             td= m.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= m.remoteHost
             td= m.event.message
 

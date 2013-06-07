@@ -1,6 +1,6 @@
 package com.github.cb372.phonehome.listener
 
-import com.github.cb372.phonehome.model.{ErrorEvent, MessageEvent, TimingEvent, Timestamped}
+import com.github.cb372.phonehome.model.{ErrorEvent, MessageEvent, TimingEvent, Received}
 import scala.collection.immutable.Queue
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
@@ -11,20 +11,20 @@ import scala.annotation.tailrec
  */
 class RecentEventsRecorder(bufferSize: Int) extends PhoneHomeEventListener {
 
-  val recentErrors = new AtomicReference(Queue[Timestamped[ErrorEvent]]())
-  val recentMessages = new AtomicReference(Queue[Timestamped[MessageEvent]]())
-  val recentTimings = new AtomicReference(Queue[Timestamped[TimingEvent]]())
+  val recentErrors = new AtomicReference(Queue[Received[ErrorEvent]]())
+  val recentMessages = new AtomicReference(Queue[Received[MessageEvent]]())
+  val recentTimings = new AtomicReference(Queue[Received[TimingEvent]]())
 
-  def onError(event: Timestamped[ErrorEvent]) {
-    update(recentErrors, { (q: Queue[Timestamped[ErrorEvent]]) => q.enqueueFinite(event, bufferSize) })
+  def onError(event: Received[ErrorEvent]) {
+    update(recentErrors, { (q: Queue[Received[ErrorEvent]]) => q.enqueueFinite(event, bufferSize) })
   }
 
-  def onMessage(event: Timestamped[MessageEvent]) {
-    update(recentMessages, { (q: Queue[Timestamped[MessageEvent]]) => q.enqueueFinite(event, bufferSize) })
+  def onMessage(event: Received[MessageEvent]) {
+    update(recentMessages, { (q: Queue[Received[MessageEvent]]) => q.enqueueFinite(event, bufferSize) })
   }
 
-  def onTiming(event: Timestamped[TimingEvent]) {
-    update(recentTimings, { (q: Queue[Timestamped[TimingEvent]]) => q.enqueueFinite(event, bufferSize) })
+  def onTiming(event: Received[TimingEvent]) {
+    update(recentTimings, { (q: Queue[Received[TimingEvent]]) => q.enqueueFinite(event, bufferSize) })
   }
 
   /**

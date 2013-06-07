@@ -15,7 +15,7 @@ case class Error(name: String,
   }
 
   override def toString: String = {
-    s"""$name: $message${locationInfo getOrElse ""}"""
+    s"""$name: $message ${locationInfo getOrElse ""}"""
   }
 }
 
@@ -48,8 +48,8 @@ case class TimingEvent(override val app: String,
                        timing: Timing,
                        override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
 
-case class Timestamped[T](time: DateTime, event: T)
+case class Received[T](time: DateTime, remoteHost: String, event: T)
 
-object Timestamped {
-  def apply[T](event: T): Timestamped[T] = Timestamped(new DateTime(), event)
+object Received {
+  def apply[T](remoteHost: String, event: T): Received[T] = Received(new DateTime(), remoteHost, event)
 }

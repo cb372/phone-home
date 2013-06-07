@@ -20,10 +20,10 @@ object DefaultLtsvFormats {
     for { m <- e.customFields; k <- m.keys } sb.append(s"$k:${m(k)}\t")
   }
 
-  implicit def timestampedLtsv[T: LtsvFormat]: LtsvFormat[Timestamped[T]] = new LtsvFormat[Timestamped[T]] {
-    def appendLtsv(t: Timestamped[T], sb: StringBuilder) {
-      sb.append(s"time:${t.time}\t")
-      implicitly[LtsvFormat[T]].appendLtsv(t.event, sb)
+  implicit def receivedLtsv[T: LtsvFormat]: LtsvFormat[Received[T]] = new LtsvFormat[Received[T]] {
+    def appendLtsv(r: Received[T], sb: StringBuilder) {
+      sb.append(s"time:${r.time}\thost:${r.remoteHost}\t")
+      implicitly[LtsvFormat[T]].appendLtsv(r.event, sb)
     }
   }
 

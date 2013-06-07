@@ -10,6 +10,7 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.scalatra.{ScalatraServlet, CorsSupport}
 import scala.concurrent.{future, ExecutionContext}
+import javax.servlet.http.HttpServletRequest
 
 class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
                           authString: Option[String])
@@ -39,12 +40,13 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
     response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"))
   }
 
-  private def processEvent[E](parseResult: Either[Throwable, E])(notification: (Timestamped[E], PhoneHomeEventListener) => Unit) = {
+  private def processEvent[E](parseResult: Either[Throwable, E], request: HttpServletRequest)
+                             (notification: (Received[E], PhoneHomeEventListener) => Unit) = {
     parseResult fold ({ e =>
       logger.info(s"Rejecting invalid json: ${request.body}")
       halt(400)
     }, { event =>
-      val timestamped = Timestamped(event)
+      val timestamped = Received(request.getRemoteHost, event)
       // notify listeners asynchronously
       listeners.map { l => future { notification(timestamped, l) } }
       "OK"
@@ -53,17 +55,17 @@ class PhoneHomeController(listeners: Seq[PhoneHomeEventListener],
 
   post("/errors") {
     val parseResult = catching(classOf[Exception]).either(parsedBody.extract[ErrorEvent])
-    processEvent(parseResult) { case (event, listener) => listener.onError(event) }
+    processEvent(parseResult, request) { case (event, listener) => listener.onError(event) }
   }
 
   post("/messages") {
     val parseResult = catching(classOf[Exception]).either(parsedBody.extract[MessageEvent])
-    processEvent(parseResult) { case (event, listener) => listener.onMessage(event) }
+    processEvent(parseResult, request) { case (event, listener) => listener.onMessage(event) }
   }
 
   post("/timings") {
     val parseResult = catching(classOf[Exception]).either(parsedBody.extract[TimingEvent])
-    processEvent(parseResult) { case (event, listener) => listener.onTiming(event) }
+    processEvent(parseResult, request) { case (event, listener) => listener.onTiming(event) }
   }
 
 }

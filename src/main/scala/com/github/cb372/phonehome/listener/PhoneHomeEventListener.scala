@@ -4,9 +4,9 @@ package listener
 import model._
 
 trait PhoneHomeEventListener {
-  def onError(event: Timestamped[ErrorEvent])
-  def onMessage(event: Timestamped[MessageEvent])
-  def onTiming(event: Timestamped[TimingEvent])
+  def onError(event: Received[ErrorEvent])
+  def onMessage(event: Received[MessageEvent])
+  def onTiming(event: Received[TimingEvent])
 }
 
 

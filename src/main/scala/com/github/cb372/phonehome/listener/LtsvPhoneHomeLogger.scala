@@ -17,15 +17,15 @@ class LtsvPhoneHomeLogger extends PhoneHomeEventListener with LtsvBuilder {
 
   import DefaultLtsvFormats._
 
-  def onError(event: Timestamped[ErrorEvent]) {
+  def onError(event: Received[ErrorEvent]) {
     errorsLogger.info(toLtsv(event))
   }
 
-  def onMessage(event: Timestamped[MessageEvent]) {
+  def onMessage(event: Received[MessageEvent]) {
     messagesLogger.info(toLtsv(event))
   }
 
-  def onTiming(event: Timestamped[TimingEvent]) {
+  def onTiming(event: Received[TimingEvent]) {
     timingsLogger.info(toLtsv(event))
   }
 
