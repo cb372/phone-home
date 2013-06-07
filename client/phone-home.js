@@ -113,6 +113,18 @@ if (typeof PhoneHome !== 'object') {
                 }      
             },
 
+            addOnErrorHandler: function() {
+                window.onerror = function(errorMsg, errorFile, errorLine) {
+                    var err = { 
+                        name: "onerror", 
+                        message: errorMsg,
+                        file: errorFile,
+                        line: errorLine
+                    };
+                    _sendError(err)
+                };
+            },
+
             sendMessage: function(message) {
                 _sendMessage(message);
             },

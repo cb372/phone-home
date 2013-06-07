@@ -86,6 +86,20 @@ Simply wrap this code in `PhoneHome.wrap()` and any exceptions will be caught an
         });
     </script>
 
+##### onerror Handler
+
+Even if you try to `wrap()` all of your JS code, some errors may still slip through the net. You can make sure that absolutely all errors are phoned home by adding a `window.onerror` handler:
+
+    <script type="text/javascript">
+        PhoneHome.addOnErrorHandler();
+    </script>
+
+A couple of notes on error handling semantics:
+
+* `window.onerror` is only called for *uncaught* errors. So any errors that you handle and swallow using `PhoneHome.wrap()` will not reach the `onerror` handler. This means that you don't need to worry about the same error being reported twice.
+
+* Because `window.onerror` is just a listener, you cannot use it to swallow errors. Any errors that get this far will also reach your user's browser error console. If you want to swallow errors, use `PhoneHome.wrap()`.
+
 #### Sending timing info
 
 Call `PhoneHome.sendTiming()` to send information on how long the page took to load.

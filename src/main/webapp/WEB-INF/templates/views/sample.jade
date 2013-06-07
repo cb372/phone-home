@@ -30,11 +30,24 @@ script(type='text/javascript' src='js/phone-home.js')
       return false;
   }
 
+  function addOnErrorHandler() {
+      PhoneHome.addOnErrorHandler();
+      return false;
+  }
+
 form.form-horizontal#sampleForm
   .control-group
-    label.control-label(for='errorButton') Throw an exception:
+    label.control-label(for='errorButton') Throw a wrapped exception:
     .controls
       button.btn#errorButton(onclick='wrapAndSendError();') Click me!
+  .control-group
+    label.control-label(for='errorHandlerButton') Enable onerror handler:
+    .controls
+      button.btn#errorHandlerButton(onclick='addOnErrorHandler();') Click me!
+  .control-group
+    label.control-label(for='errorButton') Throw an unwrapped exception:
+    .controls
+      button.btn#errorButton(onclick='riskyFunction();') Click me!
   .control-group
     label.control-label(for='messageButton') Send a message:
     .controls
