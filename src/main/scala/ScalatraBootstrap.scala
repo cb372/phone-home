@@ -1,5 +1,6 @@
 import com.github.cb372.phonehome._
 import com.github.cb372.phonehome.listener.{MongoWriter, RecentEventsRecorder, LtsvPhoneHomeLogger}
+import com.github.cb372.phonehome.stats.MongoStatsRepository
 import com.mongodb.casbah.{MongoDB, MongoClientURI, MongoClient}
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.webapp.WebAppContext
@@ -15,6 +16,7 @@ class ScalatraBootstrap extends LifeCycle {
 
   val mongoDb = createMongoDB()
   val mongoWriter = new MongoWriter(mongoDb)
+  val mongoStatsRepository = new MongoStatsRepository(mongoDb)
 
   val ltsvLogger = new LtsvPhoneHomeLogger
 
@@ -31,6 +33,7 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
     context.mount(new StaticResourcesController, "/*")
     context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
+    context.mount(new StatsController(mongoStatsRepository), "/stats")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
   }
 
