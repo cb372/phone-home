@@ -1,6 +1,7 @@
 package com.github.cb372.phonehome.model
 
 import org.joda.time.DateTime
+import java.util.concurrent.atomic.AtomicLong
 
 case class Error(name: String,
                  message: String,
@@ -48,8 +49,10 @@ case class TimingEvent(override val app: String,
                        timing: Timing,
                        override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
 
-case class Received[T](time: DateTime, remoteHost: String, event: T)
+case class Received[T](id: Long, time: DateTime, remoteHost: String, event: T)
 
 object Received {
-  def apply[T](remoteHost: String, event: T): Received[T] = Received(new DateTime(), remoteHost, event)
+  private val nextId = new AtomicLong(System.currentTimeMillis())
+
+  def apply[T](remoteHost: String, event: T): Received[T] = Received(nextId.incrementAndGet(), new DateTime(), remoteHost, event)
 }
