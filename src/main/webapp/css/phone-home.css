@@ -1,0 +1,25 @@
+th.time, td.time {
+    width: 140px;
+}
+
+th.address, td.address {
+    width: 120px;
+}
+
+.expand, .expand-all, .collapse-all {
+    cursor: pointer;
+}
+
+div.details {
+    display: none;
+    padding: 5px;
+}
+
+.details table td:first-child {
+    white-space: nowrap;
+}
+
+.green-striped tbody > tr:nth-child(odd) > td,
+.green-striped tbody > tr:nth-child(odd) > td {
+    background-color: #f9f9f0;
+}

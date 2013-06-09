@@ -4,6 +4,48 @@
 -@ val messages: Seq[Received[MessageEvent]]
 - attributes("title") = "Recent events"
 
+:javascript
+  function toggleDetails(eventId) {
+    $icon = $('#expand-' + eventId).find('i');
+    $details = $('#details-' + eventId);
+    $details.slideToggle(200, function() {
+      $icon.toggleClass('icon-plus');
+      $icon.toggleClass('icon-minus');
+    });
+  }
+
+  function showDetails(eventId) {
+    $icon = $('#expand-' + eventId).find('i');
+    $details = $('#details-' + eventId);
+    $details.show(0, function() {
+      $icon.removeClass('icon-plus');
+      $icon.addClass('icon-minus');
+    });
+  }
+
+  function hideDetails(eventId) {
+    $icon = $('#expand-' + eventId).find('i');
+    $expandButton = $('#expand-' + eventId);
+    $details = $('#details-' + eventId);
+    $details.hide(0, function() {
+      $icon.addClass('icon-plus');
+      $icon.removeClass('icon-minus');
+    });
+  }
+
+  function showAllDetails(eventType) {
+    $('.expand.' + eventType).each(function() {
+      var eventId = $(this).data('event-id');
+      showDetails(eventId);
+    });
+  }
+
+  function hideAllDetails(eventType) {
+    $('.expand.' + eventType).each(function() {
+    var eventId = $(this).data('event-id');
+    hideDetails(eventId);
+    });
+  }
 .tabbable
   ul.nav.nav-tabs
     li.active
@@ -15,39 +57,138 @@
 
   .tab-content
 
-    .tab-pane.active(id='tab-errors')
+    .tab-pane.active#tab-errors
       table.table.table-striped
         tr
-          th Time
-          th Client address
-          th Error
+          th.time Time
+          th.address Client address
+          th.error
+            | Error
+            | [
+            span.expand-all(onclick='showAllDetails("error")')
+              i.icon-plus
+            | /
+            span.collapse-all(onclick='hideAllDetails("error")')
+              i.icon-minus
+            | ]
         - for(e <- errors)
           tr
             td= e.time.toString("yyyy-MM-dd HH:mm:ss")
             td= e.remoteHost
-            td= e.event.error
+            td
+              span= e.event.error
+              b [
+              span.expand.error(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+                i.icon-plus
+              b ]
+              div.details(id='details-#{e.id.toString}')
+                table.table.green-striped.table-condensed.table-bordered
+                  tr
+                    td App
+                    td= e.event.app
+                  tr
+                    td URL
+                    td= e.event.url
+                  tr
+                    td User Agent
+                    td= e.event.userAgent
+                  - for (map <- e.event.customFields)
+                    - for ((k, v) <- map)
+                      tr
+                        td= k
+                        td= v
 
-    .tab-pane(id='tab-timings')
+    .tab-pane#tab-timings
       table.table.table-striped
         tr
-          th Time
-          th Client address
-          th Total page load time (ms)
-        - for(t <- timings)
+          th.time Time
+          th.address Client address
+          th.load-time
+            | Total page load time (ms)
+            | [
+            span.expand-all(onclick='showAllDetails("timing")')
+              i.icon-plus
+            | /
+            span.collapse-all(onclick='hideAllDetails("timing")')
+              i.icon-minus
+            | ]
+        - for(e <- timings)
           tr
-            td= t.time.toString("yyyy-MM-dd HH:mm:ss")
-            td= t.remoteHost
-            td= t.event.timing.total
+            td= e.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= e.remoteHost
+            td
+              span= e.event.timing.total
+              b [
+              span.expand.timing(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+                i.icon-plus
+              b ]
+              div.details(id='details-#{e.id.toString}')
+                table.table.green-striped.table-condensed.table-bordered
+                  tr
+                    td App
+                    td= e.event.app
+                  tr
+                    td URL
+                    td= e.event.url
+                  tr
+                    td User Agent
+                    td= e.event.userAgent
+                  - for (map <- e.event.customFields)
+                    - for ((k, v) <- map)
+                      tr
+                        td= k
+                        td= v
+                  tr
+                    td Network (ms)
+                    td= e.event.timing.network
+                  tr
+                    td Request-response (ms)
+                    td= e.event.timing.requestResponse
+                  tr
+                    td DOM (ms)
+                    td= e.event.timing.dom
+                  tr
+                    td Page load (ms)
+                    td= e.event.timing.pageLoad
 
-    .tab-pane(id='tab-messages')
+    .tab-pane#tab-messages
       table.table.table-striped
         tr
-          th Time
-          th Client address
-          th Message
-        - for(m <- messages)
+          th.time Time
+          th.address Client address
+          th.message
+            | Message
+            | [
+            span.expand-all(onclick='showAllDetails("message")')
+              i.icon-plus
+            | /
+            span.collapse-all(onclick='hideAllDetails("message")')
+              i.icon-minus
+            | ]
+        - for(e <- messages)
           tr
-            td= m.time.toString("yyyy-MM-dd HH:mm:ss")
-            td= m.remoteHost
-            td= m.event.message
+            td= e.time.toString("yyyy-MM-dd HH:mm:ss")
+            td= e.remoteHost
+            td
+              span= e.event.message
+              b [
+              span.expand.message(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+                i.icon-plus
+              b ]
+              div.details(id='details-#{e.id.toString}')
+                table.table.green-striped.table-condensed.table-bordered
+                  tr
+                    td App
+                    td= e.event.app
+                  tr
+                    td URL
+                    td= e.event.url
+                  tr
+                    td User Agent
+                    td= e.event.userAgent
+                  - for (map <- e.event.customFields)
+                    - for ((k, v) <- map)
+                      tr
+                        td= k
+                        td= v
 
