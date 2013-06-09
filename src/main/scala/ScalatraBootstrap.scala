@@ -5,13 +5,16 @@ import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra._
 import javax.servlet.ServletContext
+import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 
 class ScalatraBootstrap extends LifeCycle {
+  val logger = LoggerFactory.getLogger(getClass)
 
   val recentEventsRecorder = new RecentEventsRecorder(100)
 
   val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
+  logger.info("MongoDB URI = {}", mongoURI)
   val mongoClient = MongoClient(mongoURI)
   val mongoDb = mongoClient("phonehome")
   val mongoWriter = new MongoWriter(mongoDb)
