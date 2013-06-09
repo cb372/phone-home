@@ -38,13 +38,17 @@ class ScalatraBootstrap extends LifeCycle {
     val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
     logger.info("MongoDB URI = {}", mongoURI)
     val mongoClient = MongoClient(mongoURI)
-    val mongoDb = mongoClient("phonehome")
+    val mongoDb = mongoClient(mongoURI.database getOrElse "phonehome")
 
     for {
       u <- mongoURI.username
       p <- mongoURI.password
-    } mongoDb.authenticate(u, new String(p))
+    } {
+      val authResult = mongoDb.authenticate(u, new String(p))
+      logger.info("Authenticated to MongoDB. Auth OK: {}", authResult)
+    }
 
+    logger.info("Initialized MongoDB: {}", mongoDb.name)
     mongoDb
   }
 
