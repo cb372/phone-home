@@ -1,5 +1,6 @@
 import com.github.cb372.phonehome._
-import com.github.cb372.phonehome.listener.{RecentEventsRecorder, LtsvPhoneHomeLogger}
+import com.github.cb372.phonehome.listener.{MongoWriter, RecentEventsRecorder, LtsvPhoneHomeLogger}
+import com.mongodb.casbah.{MongoClientURI, MongoClient}
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra._
@@ -9,9 +10,18 @@ import scala.concurrent.ExecutionContext
 class ScalatraBootstrap extends LifeCycle {
 
   val recentEventsRecorder = new RecentEventsRecorder(100)
+
+  val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
+  val mongoClient = MongoClient(mongoURI)
+  val mongoDb = mongoClient("phonehome")
+  val mongoWriter = new MongoWriter(mongoDb)
+
+  val ltsvLogger = new LtsvPhoneHomeLogger
+
   val listeners  = Seq(
-    new LtsvPhoneHomeLogger,
-    recentEventsRecorder
+    recentEventsRecorder,
+    ltsvLogger,
+    mongoWriter
   )
 
   val authString = Some("not so secret")

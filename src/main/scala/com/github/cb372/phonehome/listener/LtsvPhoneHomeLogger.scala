@@ -4,7 +4,7 @@ package listener
 import model._
 
 import org.slf4j.LoggerFactory
-import com.github.cb372.phonehome.ltsv.{LtsvBuilder, DefaultLtsvFormats, LtsvFormat}
+import com.github.cb372.phonehome.ltsv.{LtsvBuilder, DefaultLtsvFormats}
 
 /**
  * Author: chris
