@@ -1,6 +1,6 @@
 import com.github.cb372.phonehome._
 import com.github.cb372.phonehome.listener.{MongoWriter, RecentEventsRecorder, LtsvPhoneHomeLogger}
-import com.mongodb.casbah.{MongoClientURI, MongoClient}
+import com.mongodb.casbah.{MongoDB, MongoClientURI, MongoClient}
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra._
@@ -13,10 +13,7 @@ class ScalatraBootstrap extends LifeCycle {
 
   val recentEventsRecorder = new RecentEventsRecorder(100)
 
-  val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
-  logger.info("MongoDB URI = {}", mongoURI)
-  val mongoClient = MongoClient(mongoURI)
-  val mongoDb = mongoClient("phonehome")
+  val mongoDb = createMongoDB()
   val mongoWriter = new MongoWriter(mongoDb)
 
   val ltsvLogger = new LtsvPhoneHomeLogger
@@ -36,5 +33,20 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
   }
+
+  private def createMongoDB(): MongoDB = {
+    val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
+    logger.info("MongoDB URI = {}", mongoURI)
+    val mongoClient = MongoClient(mongoURI)
+    val mongoDb = mongoClient("phonehome")
+
+    for {
+      u <- mongoURI.username
+      p <- mongoURI.password
+    } mongoDb.authenticate(u, new String(p))
+
+    mongoDb
+  }
+
 
 }
