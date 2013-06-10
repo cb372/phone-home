@@ -8,9 +8,9 @@ import com.typesafe.sbt.SbtStartScript
 
 object PhonehomeServerBuild extends Build {
   val Organization = "com.github.cb372"
-  val Name = "phone-home Server"
+  val Name = "phonehome"
   val Version = "0.1.0-SNAPSHOT"
-  val ScalaVersion = "2.10.0"
+  val ScalaVersion = "2.10.2"
   val ScalatraVersion = "2.2.1"
 
   lazy val project = Project (
