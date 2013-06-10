@@ -22,6 +22,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new StaticResourcesController, "/*")
     context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
+    context.mount(new HealthCheckController, "/health")
   }
 
 }
