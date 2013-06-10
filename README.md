@@ -62,6 +62,9 @@ Configuration options:
   <tr><td>authString</td><td>"not so secret"</td><td>A string that is passed as an HTTP header with all POST requests to the PhoneHome server. If you set an authString on the server side, this should be set to the same value.</td></tr>
   <tr><td>customFields</td><td>{} (empty hash)</td><td>A hash of any other useful information that you want to include. Every time a message is posted to the PhoneHome server, these fields will be included.</td></tr>
   <tr><td>swallowErrors</td><td>true</td><td>After an exception is caught and sent to the PhoneHome server, should it be swallowed or not. If this is set to false, the exception will be rethrown.</td></tr>
+  <tr><td>errorSamplingRate</td><td>1.0</td><td>Sampling rate for reporting errors. Should be between 0.0 (report no errors) and 1.0 (report all errors). This can help reduce load on your server if you have a large userbase.</td></tr>
+  <tr><td>timingSamplingRate</td><td>1.0</td><td>Sampling rate for sending timing reports. Should be between 0.0 and 1.0.</td></tr>
+  <tr><td>messageSamplingRate</td><td>1.0</td><td>Sampling rate for sending informational messages. Should be between 0.0 and 1.0.</td></tr>
 </table>
 
 #### Sending error reports
