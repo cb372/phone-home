@@ -19,7 +19,7 @@ class ScalatraBootstrap extends LifeCycle {
   implicit val exContext = ExecutionContext.Implicits.global
 
   override def init(context: ServletContext) {
-    context.mount(new StaticResourcesController, "/*")
+    context.mount(new RootController, "/*")
     context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
     context.mount(new HealthCheckController, "/health")
