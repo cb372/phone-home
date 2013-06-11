@@ -42,7 +42,7 @@ Note: The application server must support Servlet 3.0. PhoneHome server has been
 
 TODO: document how to run on Heroku
 
-Once the server is running, open http://localhost:8080/ in your browser.
+Once the server is running, open [http://localhost:8080/](http://localhost:8080/) in your browser.
 
 #### Configuration
 
