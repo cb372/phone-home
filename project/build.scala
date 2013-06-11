@@ -26,6 +26,7 @@ object PhonehomeServerBuild extends Build {
       version := Version,
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
+      crossPaths := false, // remove the _2.10 from published artifacts
       publishTo <<= version { (v: String) =>
         if (v.trim.endsWith("SNAPSHOT"))
           Some("snapshots" at sys.props.getOrElse("publish.repo.snapshots", "Please set the 'publish.repo.snapshots' system property"))
