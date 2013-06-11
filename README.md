@@ -25,9 +25,34 @@ git clone git://github.com/cb372/phone-home.git
 ./sbt container:start
 ````
 
-TODO: document how to use sbt-start-script, how to run on Heroku
+In production, you don't want to be running your server from sbt. Generate a start script and then run that to start your server:
 
-Once the server is running, open http://localhost:8080/sample in your browser.
+````
+./sbt start-script
+target/start
+````
+
+Alternatively, you might want to package the server up as a war file and run it on on an application server:
+
+````
+./sbt package
+````
+
+Note: The application server must support Servlet 3.0. PhoneHome server has been tested with Tomcat 7.
+
+TODO: document how to run on Heroku
+
+Once the server is running, open http://localhost:8080/ in your browser.
+
+#### Configuration
+
+PhoneHome server can be configured using environment variables:
+
+<table>
+  <tr><th>Env var</th><th>Default value</th><th>Description</th></tr>
+  <tr><td>PHONEHOME_LOGDIR</td><td>logs</td><td>Log output directory (best to set this to an absolute path)</td></tr>
+  <tr><td>PHONEHOME_AUTH_STRING</td><td>(null)</td><td>The auth string that clients should send with their requests (optional)</td></tr>
+</table>
 
 ### Client
 
