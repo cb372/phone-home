@@ -14,7 +14,7 @@ class ScalatraBootstrap extends LifeCycle {
     recentEventsRecorder
   )
 
-  val authString = Some("not so secret")
+  val authString = sys.env.get("PHONEHOME_AUTH_STRING")
 
   implicit val exContext = ExecutionContext.Implicits.global
 
