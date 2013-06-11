@@ -26,6 +26,12 @@ object PhonehomeServerBuild extends Build {
       version := Version,
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
+      publishTo <<= version { (v: String) =>
+        if (v.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at sys.props.getOrElse("publish.repo.snapshots", "Please set the 'publish.repo.snapshots' system property"))
+        else
+          Some("releases"  at sys.props.getOrElse("publish.repo.releases", "Please set the 'publish.repo.releases' system property"))
+      },
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
