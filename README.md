@@ -139,23 +139,29 @@ The following timings are included:
   <tr><td>network</td><td>All network time, including DNS, TCP connection and HTTP request and response</td></tr>
   <tr><td>requestResponse</td><td>Time from starting the HTTP request to the end of the HTTP response</td></tr>
   <tr><td>dom</td><td>Time spent loading the DOM</td></tr>
-  <tr><td>pageLoad</td><td>All time spent rendering the page, including loading the DOM</td></tr>
+  <tr><td>pageLoad</td><td>Time between the end of the response and the page being fully loaded. Note that the browser may start loading the DOM before the response completes.</td></tr>
   <tr><td>total</td><td>Absolutely everything, from the user clicking a link the page being completely loaded</td></tr>
 </table>
 
 Note that some browsers (e.g. Safari) do not yet support the Navigation Timing API. In this case, the `sendTiming()` method will simply do nothing.
 
-Of course, you should call `sendTiming()` after page load has completed. If you're using jQuery, wrap the call in a `document.ready()`:
+Of course, you should call `sendTiming()` after page load has completed. If you're using jQuery, add a listener for the `window.onload` event:
 
-    $(function() { PhoneHome.sendTiming(); });
+    $(window).on('load', function() { 
+        setTimeout(function() { 
+            PhoneHome.sendTiming(); 
+        }, 0);
+    });
 
-If you prefer to do things old-skool, use an `onLoad()` event:
+If you prefer to do things old-skool, set the `window.onLoad` handler directly:
 
     window.onload = function() {
         setTimeout(function() { 
             PhoneHome.sendTiming(); 
         }, 0);
     }
+
+Make sure to use `setTimeout`, otherwise the handler will execute before the load event completes, meaning that the required timing information is ready.
 
 #### Sending arbitrary messages
 
