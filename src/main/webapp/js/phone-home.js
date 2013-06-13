@@ -61,6 +61,22 @@
                 }
             };
 
+            // A best-effort attempt to extract error name and message
+            // from a string of the form "errorName: error message",
+            // as passed to the window.onerror handler.
+            var _parseErrorMessage = function(errorMessage) {
+                var separator = ": ";
+                var i = errorMessage.indexOf(separator);
+                if (i > -1 && i < 30) {
+                    return {
+                        name: errorMessage.slice(0, i),
+                        message: errorMessage.slice(i + separator.length)
+                    };
+                } else {
+                    return undefined;
+                }
+            };
+
             var _sendError = function(e) {
                 try {
                     _sample(function() {
@@ -136,12 +152,23 @@
 
                 addOnErrorHandler: function() {
                     window.onerror = function(errorMsg, errorFile, errorLine) {
-                        var err = {
-                            name: "onerror",
-                            message: errorMsg,
-                            file: errorFile,
-                            line: errorLine
-                        };
+                        var parseResult = _parseErrorMessage(errorMsg);
+                        var err;
+                        if (parseResult !== undefined) {
+                            err = {
+                                name: parseResult.name,
+                                message: parseResult.message,
+                                fileName: errorFile,
+                                lineNumber: errorLine
+                            };
+                        } else {
+                            err = {
+                                name: "onerror",
+                                message: errorMsg,
+                                fileName: errorFile,
+                                lineNumber: errorLine
+                            };
+                        }
                         _sendError(err)
                     };
                 },
