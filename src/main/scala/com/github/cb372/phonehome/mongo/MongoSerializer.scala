@@ -43,6 +43,7 @@ object DefaultMongoSerializers {
       MongoDBObject(
         "app" -> event.app,
         "url" -> event.url,
+        "userAgent" -> event.userAgent,
         "customFields" -> event.customFields,
         "error" -> implicitly[MongoSerializer[Error]].toDBObject(event.error)
       )
@@ -66,6 +67,7 @@ object DefaultMongoSerializers {
       MongoDBObject(
         "app" -> event.app,
         "url" -> event.url,
+        "userAgent" -> event.userAgent,
         "customFields" -> event.customFields,
         "timing" -> implicitly[MongoSerializer[Timing]].toDBObject(event.timing)
       )
@@ -77,6 +79,7 @@ object DefaultMongoSerializers {
       MongoDBObject(
         "app" -> event.app,
         "url" -> event.url,
+        "userAgent" -> event.userAgent,
         "customFields" -> event.customFields,
         "message" -> event.message
       )
