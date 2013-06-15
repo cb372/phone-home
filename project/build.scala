@@ -8,9 +8,9 @@ import com.typesafe.sbt.SbtStartScript
 
 object PhonehomeServerBuild extends Build {
   val Organization = "com.github.cb372"
-  val Name = "phone-home Server"
+  val Name = "phonehome"
   val Version = "0.1.0-SNAPSHOT"
-  val ScalaVersion = "2.10.0"
+  val ScalaVersion = "2.10.2"
   val ScalatraVersion = "2.2.1"
 
   lazy val project = Project (
@@ -27,6 +27,13 @@ object PhonehomeServerBuild extends Build {
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
       scalacOptions += "-feature",
+      crossPaths := false, // remove the _2.10 from published artifacts
+      publishTo <<= version { (v: String) =>
+        if (v.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at sys.props.getOrElse("publish.repo.snapshots", "Please set the 'publish.repo.snapshots' system property"))
+        else
+          Some("releases"  at sys.props.getOrElse("publish.repo.releases", "Please set the 'publish.repo.releases' system property"))
+      },
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,

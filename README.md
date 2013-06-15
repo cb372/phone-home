@@ -25,9 +25,34 @@ git clone git://github.com/cb372/phone-home.git
 ./sbt container:start
 ````
 
-TODO: document how to use sbt-start-script, how to run on Heroku
+In production, you don't want to be running your server from sbt. Generate a start script and then run that to start your server:
 
-Once the server is running, open http://localhost:8080/sample in your browser.
+````
+./sbt start-script
+target/start
+````
+
+Alternatively, you might want to package the server up as a war file and run it on on an application server:
+
+````
+./sbt package
+````
+
+Note: The application server must support Servlet 3.0. PhoneHome server has been tested with Tomcat 7.
+
+TODO: document how to run on Heroku
+
+Once the server is running, open [http://localhost:8080/](http://localhost:8080/) in your browser.
+
+#### Configuration
+
+PhoneHome server can be configured using environment variables:
+
+<table>
+  <tr><th>Env var</th><th>Default value</th><th>Description</th></tr>
+  <tr><td>PHONEHOME_LOGDIR</td><td>logs</td><td>Log output directory (best to set this to an absolute path)</td></tr>
+  <tr><td>PHONEHOME_AUTH_STRING</td><td>(null)</td><td>The auth string that clients should send with their requests (optional)</td></tr>
+</table>
 
 ### Client
 
@@ -62,6 +87,9 @@ Configuration options:
   <tr><td>authString</td><td>"not so secret"</td><td>A string that is passed as an HTTP header with all POST requests to the PhoneHome server. If you set an authString on the server side, this should be set to the same value.</td></tr>
   <tr><td>customFields</td><td>{} (empty hash)</td><td>A hash of any other useful information that you want to include. Every time a message is posted to the PhoneHome server, these fields will be included.</td></tr>
   <tr><td>swallowErrors</td><td>true</td><td>After an exception is caught and sent to the PhoneHome server, should it be swallowed or not. If this is set to false, the exception will be rethrown.</td></tr>
+  <tr><td>errorSamplingRate</td><td>1.0</td><td>Sampling rate for reporting errors. Should be between 0.0 (report no errors) and 1.0 (report all errors). This can help reduce load on your server if you have a large userbase.</td></tr>
+  <tr><td>timingSamplingRate</td><td>1.0</td><td>Sampling rate for sending timing reports. Should be between 0.0 and 1.0.</td></tr>
+  <tr><td>messageSamplingRate</td><td>1.0</td><td>Sampling rate for sending informational messages. Should be between 0.0 and 1.0.</td></tr>
 </table>
 
 #### Sending error reports
@@ -111,23 +139,29 @@ The following timings are included:
   <tr><td>network</td><td>All network time, including DNS, TCP connection and HTTP request and response</td></tr>
   <tr><td>requestResponse</td><td>Time from starting the HTTP request to the end of the HTTP response</td></tr>
   <tr><td>dom</td><td>Time spent loading the DOM</td></tr>
-  <tr><td>pageLoad</td><td>All time spent rendering the page, including loading the DOM</td></tr>
+  <tr><td>pageLoad</td><td>Time between the end of the response and the page being fully loaded. Note that the browser may start loading the DOM before the response completes.</td></tr>
   <tr><td>total</td><td>Absolutely everything, from the user clicking a link the page being completely loaded</td></tr>
 </table>
 
 Note that some browsers (e.g. Safari) do not yet support the Navigation Timing API. In this case, the `sendTiming()` method will simply do nothing.
 
-Of course, you should call `sendTiming()` after page load has completed. If you're using jQuery, wrap the call in a `document.ready()`:
+Of course, you should call `sendTiming()` after page load has completed. If you're using jQuery, add a listener for the `window.onload` event:
 
-    $(function() { PhoneHome.sendTiming(); });
+    $(window).on('load', function() { 
+        setTimeout(function() { 
+            PhoneHome.sendTiming(); 
+        }, 0);
+    });
 
-If you prefer to do things old-skool, use an `onLoad()` event:
+If you prefer to do things old-skool, set the `window.onLoad` handler directly:
 
     window.onload = function() {
         setTimeout(function() { 
             PhoneHome.sendTiming(); 
         }, 0);
     }
+
+Make sure to use `setTimeout`, otherwise the handler will execute before the load event completes, meaning that the required timing information is ready.
 
 #### Sending arbitrary messages
 

@@ -1,4 +1,4 @@
-import com.github.cb372.phonehome.{StaticResourcesController, RecentEventsController, PhoneHomeController}
+import com.github.cb372.phonehome.{RootController, RecentEventsController, PhoneHomeController}
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.{ DefaultServlet, ServletContextHandler }
 import org.eclipse.jetty.webapp.WebAppContext

@@ -26,15 +26,16 @@ class ScalatraBootstrap extends LifeCycle {
     mongoWriter
   )
 
-  val authString = Some("not so secret")
+  val authString = sys.env.get("PHONEHOME_AUTH_STRING")
 
   implicit val exContext = ExecutionContext.Implicits.global
 
   override def init(context: ServletContext) {
-    context.mount(new StaticResourcesController, "/*")
+    context.mount(new RootController, "/*")
     context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
     context.mount(new StatsController(mongoStatsRepository), "/stats")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
+    context.mount(new HealthCheckController, "/health")
   }
 
   private def createMongoDB(): MongoDB = {
