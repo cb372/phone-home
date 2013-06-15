@@ -1,0 +1,48 @@
+- attributes("title") = "Stats"
+
+:javascript
+  var errorsPerDayChart;
+
+  function loadErrorsPerDay() {
+    $.get('/stats/errors/per/day/7', function(data) {
+      errorsPerDayChart.series[0].setData(data, true);
+    });
+  };
+
+  $(function() {
+    errorsPerDayChart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'errors-per-day',
+        type: 'line',
+        height: 200,
+        width: 900,
+        marginRight: 130,
+        marginBottom: 25,
+        events: {
+          load: loadErrorsPerDay
+        }
+      },
+      title: {
+        text: 'Errors per day',
+        x: -20 //center
+      },
+      legend: {
+        enabled: false
+      },
+      xAxis: {
+        type: 'datetime'
+      },
+      yAxis: {
+        min: 0,
+        title: { text: null }
+      },
+      series: [{
+        name: 'Errors',
+        data: []
+      }]
+    });
+  });
+
+
+#errors-per-day(width=900 height=200)
+

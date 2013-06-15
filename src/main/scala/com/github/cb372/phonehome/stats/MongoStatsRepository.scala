@@ -1,7 +1,8 @@
 package com.github.cb372.phonehome.stats
 
 import com.mongodb.casbah.Imports._
-import org.joda.time.DateTime
+import org.joda.time.{LocalDate, DateTime}
+import scala.collection.mutable
 
 /**
  * Author: chris
@@ -14,10 +15,34 @@ class MongoStatsRepository(mongo: MongoDB) extends StatsRepository {
   val timings = mongo("timings")
 
   def getErrorsPerDay(days: Int) = {
-    errors.filter(_.containsField("time"))
-          .filter(_.getAs[DateTime]("time").get.isAfter(DateTime.now().minusDays(days).toDateMidnight))
-          .groupBy(_.getAs[DateTime]("time").get.toDateMidnight)
-          .map { case (date, objs) => (date, objs.size) }
-          .toMap
+    val matchQ = MongoDBObject("$match" -> ("time" $gte DateTime.now().minusDays(days).toDateMidnight.toDateTime))
+    val groupQ = MongoDBObject("$group" ->
+      MongoDBObject("_id" ->
+        MongoDBObject(
+          "year" -> MongoDBObject("$year" -> "$time"),
+          "month" -> MongoDBObject("$month" -> "$time"),
+          "day" -> MongoDBObject("$dayOfMonth" -> "$time")
+        ),
+        "count" -> MongoDBObject("$sum" -> 1)
+      )
+    )
+    val results = errors.underlying.aggregate(matchQ, groupQ).results().iterator()
+
+    val countsPerDay = mutable.Map[LocalDate, Int]()
+    while (results.hasNext) {
+      val record = results.next
+      val id: DBObject = record.as[DBObject]("_id")
+      val date = new LocalDate(id.as[Int]("year"), id.as[Int]("month"), id.as[Int]("day"))
+      countsPerDay += (date -> record.as[Int]("count"))
+    }
+
+    // return results in date order, adding zeroes for missing days
+    for (n <- (days - 1).to(0, -1)) yield {
+      val date = new LocalDate().minusDays(n)
+      if (countsPerDay contains date)
+        (date, countsPerDay(date))
+      else
+        (date, 0)
+    }
   }
 }

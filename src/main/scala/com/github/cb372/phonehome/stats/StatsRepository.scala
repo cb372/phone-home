@@ -1,6 +1,6 @@
 package com.github.cb372.phonehome.stats
 
-import org.joda.time.DateMidnight
+import org.joda.time.{LocalDate, DateMidnight}
 
 /**
  * Author: chris
@@ -8,6 +8,6 @@ import org.joda.time.DateMidnight
  */
 trait StatsRepository {
 
-  def getErrorsPerDay(days: Int): Map[DateMidnight, Int]
+  def getErrorsPerDay(days: Int): Seq[(LocalDate, Int)]
 
 }
