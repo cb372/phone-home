@@ -31,7 +31,7 @@ class MongoStatsRepository(mongo: MongoDB) extends StatsRepository {
     val countsPerDay = mutable.Map[LocalDate, Int]()
     while (results.hasNext) {
       val record = results.next
-      val id: DBObject = record.as[DBObject]("_id")
+      val id = record.as[DBObject]("_id")
       val date = new LocalDate(id.as[Int]("year"), id.as[Int]("month"), id.as[Int]("day"))
       countsPerDay += (date -> record.as[Int]("count"))
     }
@@ -44,5 +44,23 @@ class MongoStatsRepository(mongo: MongoDB) extends StatsRepository {
       else
         (date, 0)
     }
+  }
+
+  def getErrorsByUserAgent(days: Int) = {
+    val matchQ = MongoDBObject("$match" -> ("time" $gte DateTime.now().minusDays(days).toDateMidnight.toDateTime))
+    val groupQ = MongoDBObject("$group" ->
+      MongoDBObject(
+        "_id" -> "$event.userAgent",
+        "count" -> MongoDBObject("$sum" -> 1)
+      )
+    )
+    val results = errors.underlying.aggregate(matchQ, groupQ).results().iterator()
+
+    val countsByUserAgent = mutable.Map[String, Int]()
+    while (results.hasNext) {
+      val record = results.next
+      countsByUserAgent += (record.as[String]("_id") -> record.as[Int]("count"))
+    }
+    countsByUserAgent.toMap
   }
 }

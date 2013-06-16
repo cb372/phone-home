@@ -10,4 +10,7 @@ trait StatsRepository {
 
   def getErrorsPerDay(days: Int): Seq[(LocalDate, Int)]
 
+  def getErrorsByUserAgent(days: Int): Map[String, Int]
+
+
 }

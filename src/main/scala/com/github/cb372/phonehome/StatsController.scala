@@ -19,6 +19,14 @@ class StatsController(statsRepository: StatsRepository) extends PhonehomeServerS
       .map { case (date, count) => List(date.toDateMidnight(DateTimeZone.UTC).getMillis, count) }
   }
 
+  get("/errors/per/user-agent/:days") {
+    contentType = "application/json"
+    statsRepository.getErrorsByUserAgent(params("days").toInt)
+      .toList
+      .sortBy { case (name, count) => count }
+      .map { case (name, count) => List(name, count) }
+  }
+
   get("/") {
     contentType = "text/html"
     jade("stats")
