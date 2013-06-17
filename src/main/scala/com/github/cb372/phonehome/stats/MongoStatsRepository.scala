@@ -1,8 +1,9 @@
 package com.github.cb372.phonehome.stats
 
 import com.mongodb.casbah.Imports._
-import org.joda.time.{LocalDate, DateTime}
+import org.joda.time.{DateTimeZone, LocalDate, DateTime}
 import scala.collection.mutable
+import com.github.cb372.phonehome.model.Timing
 
 /**
  * Author: chris
@@ -62,5 +63,42 @@ class MongoStatsRepository(mongo: MongoDB) extends StatsRepository {
       countsByUserAgent += (record.as[String]("_id") -> record.as[Int]("count"))
     }
     countsByUserAgent.toMap
+  }
+
+  def getAverageTimingsPerHour(days: Int) = {
+    val matchQ = MongoDBObject("$match" -> ("time" $gte DateTime.now().minusDays(days).toDateMidnight.toDateTime))
+    val groupQ = MongoDBObject("$group" ->
+      MongoDBObject("_id" ->
+        MongoDBObject(
+          "year" -> MongoDBObject("$year" -> "$time"),
+          "month" -> MongoDBObject("$month" -> "$time"),
+          "day" -> MongoDBObject("$dayOfMonth" -> "$time"),
+          "hour" -> MongoDBObject("$hour" -> "$time")
+        ),
+        "network" -> MongoDBObject("$avg" -> "$event.timing.network"),
+        "requestResponse" -> MongoDBObject("$avg" -> "$event.timing.requestResponse"),
+        "dom" -> MongoDBObject("$avg" -> "$event.timing.dom"),
+        "pageLoad" -> MongoDBObject("$avg" -> "$event.timing.pageLoad"),
+        "total" -> MongoDBObject("$avg" -> "$event.timing.total")
+      )
+    )
+    val results = timings.underlying.aggregate(matchQ, groupQ).results().iterator()
+
+    val averagesPerHour = mutable.Map[DateTime, Timing]()
+    while (results.hasNext) {
+      val record = results.next
+      val id = record.as[DBObject]("_id")
+      val ts = new DateTime(id.as[Int]("year"), id.as[Int]("month"), id.as[Int]("day"), id.as[Int]("hour"), 0,
+                            DateTimeZone.UTC)
+      val averages = Timing(
+        record.as[Double]("network").toLong,
+        record.as[Double]("requestResponse").toLong,
+        record.as[Double]("dom").toLong,
+        record.as[Double]("pageLoad").toLong,
+        record.as[Double]("total").toLong
+      )
+      averagesPerHour += (ts -> averages)
+    }
+    averagesPerHour.toSeq.sortBy({ case (ts, timing) => ts.getMillis })
   }
 }

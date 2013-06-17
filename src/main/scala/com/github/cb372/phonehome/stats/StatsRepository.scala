@@ -1,6 +1,7 @@
 package com.github.cb372.phonehome.stats
 
-import org.joda.time.{LocalDate, DateMidnight}
+import org.joda.time.{DateTime, LocalDate}
+import com.github.cb372.phonehome.model.Timing
 
 /**
  * Author: chris
@@ -12,5 +13,6 @@ trait StatsRepository {
 
   def getErrorsByUserAgent(days: Int): Map[String, Int]
 
+  def getAverageTimingsPerHour(days: Int): Seq[(DateTime, Timing)]
 
 }
