@@ -61,6 +61,26 @@
                 }
             };
 
+            var _coerceToString = function(obj) {
+                if (obj === null) {
+                    return "(null)";
+                }
+                switch (typeof(obj)) {
+                    case "string":
+                        return obj;
+                    case "object":
+                        return JSON.stringify(obj);
+                    case "number":
+                        return "" + obj;
+                    case "boolean":
+                        return "" + obj;
+                    case "undefined":
+                        return "(undefined)";
+                    default:
+                        return "" + obj;
+                }
+            };
+
             // A best-effort attempt to extract error name and message
             // from a string of the form "errorName: error message",
             // as passed to the window.onerror handler.
@@ -152,6 +172,7 @@
 
                 addOnErrorHandler: function() {
                     window.onerror = function(errorMsg, errorFile, errorLine) {
+                        errorMsg = _coerceToString(errorMsg); // errorMsg may be an object, depending on browser
                         var parseResult = _parseErrorMessage(errorMsg);
                         var err;
                         if (parseResult !== undefined) {
