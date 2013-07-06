@@ -1,10 +1,8 @@
 import com.github.cb372.phonehome._
 import com.github.cb372.phonehome.event.MongoEventRepository
-import com.github.cb372.phonehome.listener.{MongoWriter, RecentEventsRecorder, LtsvPhoneHomeLogger}
+import com.github.cb372.phonehome.listener.{MongoWriter, LtsvPhoneHomeLogger}
 import com.github.cb372.phonehome.stats.MongoStatsRepository
 import com.mongodb.casbah.{MongoDB, MongoClientURI, MongoClient}
-import org.eclipse.jetty.servlet.ServletHolder
-import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra._
 import javax.servlet.ServletContext
 import org.slf4j.LoggerFactory
@@ -12,8 +10,6 @@ import scala.concurrent.ExecutionContext
 
 class ScalatraBootstrap extends LifeCycle {
   val logger = LoggerFactory.getLogger(getClass)
-
-  val recentEventsRecorder = new RecentEventsRecorder(100)
 
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
@@ -26,7 +22,6 @@ class ScalatraBootstrap extends LifeCycle {
   val ltsvLogger = new LtsvPhoneHomeLogger
 
   val listeners  = Seq(
-    recentEventsRecorder,
     ltsvLogger,
     mongoWriter
   )
@@ -37,7 +32,7 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     context.mount(new RootController, "/*")
-    context.mount(new RecentEventsController(recentEventsRecorder), "/recent")
+    context.mount(new RecentEventsController(mongoEventRepository), "/recent")
     context.mount(new StatsController(mongoStatsRepository), "/stats")
     context.mount(new PhoneHomeController(listeners, authString), "/ph/*")
     context.mount(new HealthCheckController, "/health")

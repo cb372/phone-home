@@ -78,7 +78,7 @@
             td
               span= e.event.error
               b [
-              span.expand.error(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
+              span.expand.error(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails("#{e.id.get}")')
                 i.icon-plus
               b ]
               div.details(id='details-#{e.id.get}')
@@ -119,7 +119,7 @@
             td
               span= e.event.timing.total
               b [
-              span.expand.timing(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
+              span.expand.timing(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails("#{e.id.get}")')
                 i.icon-plus
               b ]
               div.details(id='details-#{e.id.get}')
@@ -172,7 +172,7 @@
             td
               span= e.event.message
               b [
-              span.expand.message(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
+              span.expand.message(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails("#{e.id.get}")')
                 i.icon-plus
               b ]
               div.details(id='details-#{e.id.get}')
