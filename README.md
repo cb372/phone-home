@@ -18,6 +18,8 @@ All messages will also include the browser's user agent, the URL of the current 
 
 First you need to have a PhoneHome server running somewhere. PhoneHome clients will send their messages to this server.
 
+The server requires MongoDB in order to store the data that clients send to it. Please make sure MongoDB is installed and running. By default, the server will connect to Mongo at `localhost:27017`. This can be overriden using an environment variable (see below).
+
 The following commands will start a server on port 8080.
 
 ````
@@ -52,6 +54,7 @@ PhoneHome server can be configured using environment variables:
   <tr><th>Env var</th><th>Default value</th><th>Description</th></tr>
   <tr><td>PHONEHOME_LOGDIR</td><td>logs</td><td>Log output directory (best to set this to an absolute path)</td></tr>
   <tr><td>PHONEHOME_AUTH_STRING</td><td>(null)</td><td>The auth string that clients should send with their requests (optional)</td></tr>
+  <tr><td>PHONEHOME_MONGO_URL</td><td>mongodb://localhost</td><td>MongoDB URL. Supports specifying the DB name, authentication credentials, etc. If DB name is not specified, DB `phonehome` will be used.</td></tr>
 </table>
 
 ### Client
