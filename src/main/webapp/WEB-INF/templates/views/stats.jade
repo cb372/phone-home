@@ -12,9 +12,8 @@
       chart: {
         renderTo: 'errors-per-day',
         type: 'line',
-        height: 300,
-        width: 900,
-        marginBottom: 25
+        height: 350,
+        width: 550
       },
       credits: {
         enabled: false
@@ -23,7 +22,7 @@
         text: 'Errors per day'
       },
       subtitle: {
-        text: 'Last 7 days'
+        text: 'Last 7 days (UTC)'
       },
       legend: {
         enabled: false
@@ -45,9 +44,8 @@
       chart: {
         renderTo: 'errors-per-user-agent',
         type: 'pie',
-        height: 400,
-        width: 900,
-        marginBottom: 25
+        height: 350,
+        width: 390
       },
       credits: {
         enabled: false
@@ -60,6 +58,11 @@
       },
       legend: {
         enabled: false
+      },
+      tooltip: {
+        style: {
+          width: 200
+        }
       },
       plotOptions: {
         pie: {
@@ -80,9 +83,9 @@
       chart: {
         renderTo: 'average-timings',
         type: 'line',
-        height: 300,
-        width: 900,
-        marginBottom: 25
+        height: 350,
+        width: 940,
+        spacingTop: 20
       },
       credits: {
         enabled: false
@@ -91,7 +94,7 @@
         text: 'Hourly average timings'
       },
       subtitle: {
-        text: 'Last 7 days'
+        text: 'Last 7 days (UTC)'
       },
       legend: {
         enabled: true
@@ -145,10 +148,7 @@
 
   });
 
-
-#errors-per-day
-
-#errors-per-user-agent
-
+#errors-per-day(style='float: left')
+#errors-per-user-agent(style='float: right')
 #average-timings
 
