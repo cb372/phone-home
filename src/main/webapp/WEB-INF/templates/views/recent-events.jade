@@ -78,10 +78,10 @@
             td
               span= e.event.error
               b [
-              span.expand.error(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+              span.expand.error(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
                 i.icon-plus
               b ]
-              div.details(id='details-#{e.id.toString}')
+              div.details(id='details-#{e.id.get}')
                 table.table.green-striped.table-condensed.table-bordered
                   tr
                     td App
@@ -119,10 +119,10 @@
             td
               span= e.event.timing.total
               b [
-              span.expand.timing(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+              span.expand.timing(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
                 i.icon-plus
               b ]
-              div.details(id='details-#{e.id.toString}')
+              div.details(id='details-#{e.id.get}')
                 table.table.green-striped.table-condensed.table-bordered
                   tr
                     td App
@@ -172,10 +172,10 @@
             td
               span= e.event.message
               b [
-              span.expand.message(id='expand-#{e.id.toString}' data-event-id='#{e.id.toString}' onclick='toggleDetails(#{e.id.toString})')
+              span.expand.message(id='expand-#{e.id.get}' data-event-id='#{e.id.get}' onclick='toggleDetails(#{e.id.get})')
                 i.icon-plus
               b ]
-              div.details(id='details-#{e.id.toString}')
+              div.details(id='details-#{e.id.get}')
                 table.table.green-striped.table-condensed.table-bordered
                   tr
                     td App

@@ -20,7 +20,6 @@ object DefaultMongoSerializers {
   implicit def receivedSer[T : MongoSerializer](received: Received[T]): MongoSerializer[Received[T]] = new MongoSerializer[Received[T]] {
     def toDBObject(t: Received[T]) =
       MongoDBObject(
-        // don't bother serializing the ID, as Mongo provides a better one for us
         "time" -> received.time,
         "remoteHost" -> received.remoteHost,
         "event" -> implicitly[MongoSerializer[T]].toDBObject(received.event)
