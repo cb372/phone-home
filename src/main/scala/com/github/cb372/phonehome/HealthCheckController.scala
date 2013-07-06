@@ -1,6 +1,8 @@
 package com.github.cb372.phonehome
 
-class HealthCheckController extends PhonehomeServerStack {
+import org.scalatra.ScalatraServlet
+
+class HealthCheckController extends ScalatraServlet {
 
   get("/") {
     contentType = "text/plain"
