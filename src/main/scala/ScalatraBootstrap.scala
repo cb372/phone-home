@@ -39,7 +39,11 @@ class ScalatraBootstrap extends LifeCycle {
   }
 
   private def createMongoDB(): MongoDB = {
-    val mongoURI = MongoClientURI(sys.env.getOrElse("MONGOHQ_URL", "mongodb://localhost"))
+    val mongoURI = MongoClientURI(
+      sys.env.get("PHONEHOME_MONGO_URL") orElse
+      sys.env.get("MONGOHQ_URL") getOrElse
+      "mongodb://localhost"
+    )
     logger.info("MongoDB URI = {}", mongoURI)
     val mongoClient = MongoClient(mongoURI)
     val mongoDb = mongoClient(mongoURI.database getOrElse "phonehome")
