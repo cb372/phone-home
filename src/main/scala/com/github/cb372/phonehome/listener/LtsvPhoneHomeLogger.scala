@@ -4,7 +4,7 @@ package listener
 import model._
 
 import org.slf4j.LoggerFactory
-import com.github.cb372.phonehome.ltsv.{LtsvBuilder, DefaultLtsvFormats, LtsvFormat}
+import com.github.cb372.phonehome.ltsv.{LtsvBuilder, DefaultLtsvFormats}
 
 /**
  * Author: chris
@@ -14,8 +14,6 @@ class LtsvPhoneHomeLogger extends PhoneHomeEventListener with LtsvBuilder {
   val errorsLogger =  LoggerFactory.getLogger("errors")
   val messagesLogger =  LoggerFactory.getLogger("messages")
   val timingsLogger =  LoggerFactory.getLogger("timings")
-
-  import DefaultLtsvFormats._
 
   def onError(event: Received[ErrorEvent]) {
     errorsLogger.info(toLtsv(event))

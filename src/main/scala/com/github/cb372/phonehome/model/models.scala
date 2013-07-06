@@ -49,10 +49,11 @@ case class TimingEvent(override val app: String,
                        timing: Timing,
                        override val customFields: Option[Map[String, String]]) extends Event(app, url, userAgent, customFields)
 
-case class Received[T](id: Long, time: DateTime, remoteHost: String, event: T)
+case class Received[T](id: Option[String], time: DateTime, remoteHost: String, event: T)
 
 object Received {
-  private val nextId = new AtomicLong(System.currentTimeMillis())
+  def randomId = List.fill(10)(util.Random.nextPrintableChar()).mkString
 
-  def apply[T](remoteHost: String, event: T): Received[T] = Received(nextId.incrementAndGet(), new DateTime(), remoteHost, event)
+  def apply[T](remoteHost: String, event: T): Received[T] =
+    Received(Some(randomId), new DateTime(), remoteHost, event)
 }

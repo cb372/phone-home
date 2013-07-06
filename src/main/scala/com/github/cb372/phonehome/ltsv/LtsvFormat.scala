@@ -11,7 +11,9 @@ trait LtsvFormat[T] {
   def appendLtsv(t: T, sb: StringBuilder): Unit
 }
 
-object DefaultLtsvFormats {
+object LtsvFormat extends DefaultLtsvFormats
+
+private[ltsv] trait DefaultLtsvFormats {
   private def appendFixedFields(e: Event, sb: StringBuilder) {
     sb.append(s"app:${e.app}\turl:${e.url}\tuserAgent:${e.userAgent}\t")
   }
@@ -27,19 +29,19 @@ object DefaultLtsvFormats {
     }
   }
 
-  implicit object ErrorEventLtsv extends LtsvFormat[ErrorEvent] {
-    def appendLtsv(e: ErrorEvent, sb: StringBuilder) {
-      appendFixedFields(e, sb)
-      ErrorLtsv.appendLtsv(e.error, sb)
-      appendCustomFields(e, sb)
-    }
-  }
-
   implicit object ErrorLtsv extends LtsvFormat[Error] {
     def appendLtsv(e: Error, sb: StringBuilder) {
       sb.append(s"errorName:${e.name}\terrorMessage:${e.message}\t")
       for { file <- e.file } sb.append(s"errorFile:$file\t")
       for { line <- e.line } sb.append(s"errorLine:$line\t")
+    }
+  }
+
+  implicit object ErrorEventLtsv extends LtsvFormat[ErrorEvent] {
+    def appendLtsv(e: ErrorEvent, sb: StringBuilder) {
+      appendFixedFields(e, sb)
+      implicitly[LtsvFormat[Error]].appendLtsv(e.error, sb)
+      appendCustomFields(e, sb)
     }
   }
 
@@ -51,18 +53,19 @@ object DefaultLtsvFormats {
     }
   }
 
-  implicit object TimingEventLtsv extends LtsvFormat[TimingEvent] {
-    def appendLtsv(e: TimingEvent, sb: StringBuilder) {
-      appendFixedFields(e, sb)
-      TimingLtsv.appendLtsv(e.timing, sb)
-      appendCustomFields(e, sb)
-    }
-  }
-
   implicit object TimingLtsv extends LtsvFormat[Timing] {
     def appendLtsv(t: Timing, sb: StringBuilder) {
       sb.append(s"networkTime:${t.network}\trequestResponseTime:${t.requestResponse}\tdomTime:${t.dom}\tpageLoadTime:${t.pageLoad}\ttotalTime:${t.total}\t")
     }
   }
+
+  implicit object TimingEventLtsv extends LtsvFormat[TimingEvent] {
+    def appendLtsv(e: TimingEvent, sb: StringBuilder) {
+      appendFixedFields(e, sb)
+      implicitly[LtsvFormat[Timing]].appendLtsv(e.timing, sb)
+      appendCustomFields(e, sb)
+    }
+  }
+
 }
 

@@ -1,13 +1,8 @@
 package com.github.cb372.phonehome
 
-import model._
-import listener._
+import com.github.cb372.phonehome.event.EventRepository
 
-import org.slf4j.LoggerFactory
-
-class RecentEventsController(recorder: RecentEventsRecorder) extends PhonehomeServerStack {
-
-  private val logger =  LoggerFactory.getLogger(getClass)
+class RecentEventsController(repo: EventRepository) extends PhonehomeServerStack {
 
   before() {
     contentType="text/html"
@@ -15,9 +10,10 @@ class RecentEventsController(recorder: RecentEventsRecorder) extends PhonehomeSe
 
   get("/") {
     jade("recent-events",
-      "errors" -> recorder.recentErrors.get,
-      "timings" -> recorder.recentTimings.get,
-      "messages" -> recorder.recentMessages.get)
+      "errors" -> repo.latestErrors(),
+      "timings" -> repo.latestTimings(),
+      "messages" -> repo.latestMessages()
+    )
   }
 
 }

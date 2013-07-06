@@ -1,0 +1,154 @@
+- attributes("title") = "Stats"
+
+:javascript
+  function loadChartData(chart, url) {
+    $.get(url, function(data) {
+      chart.series[0].setData(data, true);
+    });
+  };
+
+  $(function() {
+    var errorsPerDayChart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'errors-per-day',
+        type: 'line',
+        height: 300,
+        width: 900,
+        marginBottom: 25
+      },
+      credits: {
+        enabled: false
+      },
+      title: {
+        text: 'Errors per day'
+      },
+      subtitle: {
+        text: 'Last 7 days'
+      },
+      legend: {
+        enabled: false
+      },
+      xAxis: {
+        type: 'datetime'
+      },
+      yAxis: {
+        min: 0,
+        title: { text: null }
+      },
+      series: [{
+        name: 'Errors',
+        data: []
+      }]
+    });
+
+    var errorsPerUserAgentChart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'errors-per-user-agent',
+        type: 'pie',
+        height: 400,
+        width: 900,
+        marginBottom: 25
+      },
+      credits: {
+        enabled: false
+      },
+      title: {
+        text: 'Errors by User Agent'
+      },
+      subtitle: {
+        text: 'Last 7 days'
+      },
+      legend: {
+        enabled: false
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: false
+          }
+        }
+      },
+      series: [{
+        name: 'Errors',
+        data: []
+      }]
+    });
+
+    var averageTimingsChart = new Highcharts.Chart({
+      chart: {
+        renderTo: 'average-timings',
+        type: 'line',
+        height: 300,
+        width: 900,
+        marginBottom: 25
+      },
+      credits: {
+        enabled: false
+      },
+      title: {
+        text: 'Hourly average timings'
+      },
+      subtitle: {
+        text: 'Last 7 days'
+      },
+      legend: {
+        enabled: true
+      },
+      xAxis: {
+        type: 'datetime'
+      },
+      yAxis: {
+        min: 0,
+        title: { text: null }
+      },
+      series: [{
+          name: 'Network',
+          data: []
+        }, {
+          name: 'Request-response',
+          data: []
+        }, {
+          name: 'DOM load',
+          data: []
+        }, {
+          name: 'Page load',
+          data: []
+        }, {
+          name: 'Total',
+          data: []
+        }]
+    });
+
+    function loadErrorsPerDay() {
+      loadChartData(errorsPerDayChart, '/stats/errors/per/day/7');
+    };
+
+    function loadErrorsPerUserAgent() {
+      loadChartData(errorsPerUserAgentChart, '/stats/errors/per/user-agent/7');
+    };
+
+    function loadAverageTimings() {
+      $.get('/stats/timings/averages/per/hour/7', function(data) {
+        averageTimingsChart.series[0].setData(data.network, false);
+        averageTimingsChart.series[1].setData(data.requestResponse, false);
+        averageTimingsChart.series[2].setData(data.dom, false);
+        averageTimingsChart.series[3].setData(data.pageLoad, false);
+        averageTimingsChart.series[4].setData(data.total, true);
+      });
+    };
+
+    loadErrorsPerDay();
+    loadErrorsPerUserAgent();
+    loadAverageTimings();
+
+  });
+
+
+#errors-per-day
+
+#errors-per-user-agent
+
+#average-timings
+
