@@ -1,11 +1,11 @@
-package com.github.cb372.phonehome.listener
+package com.github.cb372.phonehome
+package listener
 
-import com.github.cb372.phonehome.model.{ErrorEvent, MessageEvent, TimingEvent, Received}
-import com.mongodb.casbah.commons.MongoDBObject
+import model._
 import com.mongodb.casbah.Imports._
 
 import org.slf4j.LoggerFactory
-import com.github.cb372.phonehome.mongo.{MongoSerializer, DefaultMongoSerializers}
+import com.github.cb372.phonehome.mongo.MongoSerializer
 
 /**
  * Author: chris

@@ -1,9 +1,11 @@
-package com.github.cb372.phonehome.stats
+package com.github.cb372.phonehome
+package stats
+
+import model.Timing
 
 import com.mongodb.casbah.Imports._
 import org.joda.time.{DateTimeZone, LocalDate, DateTime}
 import scala.collection.mutable
-import com.github.cb372.phonehome.model.Timing
 
 /**
  * Author: chris

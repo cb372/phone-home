@@ -1,7 +1,6 @@
 package com.github.cb372.phonehome.model
 
 import org.joda.time.DateTime
-import java.util.concurrent.atomic.AtomicLong
 
 case class Error(name: String,
                  message: String,

@@ -1,7 +1,9 @@
-package com.github.cb372.phonehome.stats
+package com.github.cb372.phonehome
+package stats
+
+import model.Timing
 
 import org.joda.time.{DateTime, LocalDate}
-import com.github.cb372.phonehome.model.Timing
 
 /**
  * Author: chris

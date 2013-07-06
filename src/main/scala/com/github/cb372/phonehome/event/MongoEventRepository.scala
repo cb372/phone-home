@@ -1,9 +1,11 @@
-package com.github.cb372.phonehome.event
+package com.github.cb372.phonehome
+package event
+
+import model._
+import mongo.MongoDeserializer
 
 import com.mongodb.casbah.{MongoCollection, MongoDB}
 import com.mongodb.casbah.commons.MongoDBObject
-import com.github.cb372.phonehome.model._
-import com.github.cb372.phonehome.mongo.MongoDeserializer
 
 /**
  * Author: chris
