@@ -1,4 +1,5 @@
 import com.github.cb372.phonehome._
+import com.github.cb372.phonehome.event.MongoEventRepository
 import com.github.cb372.phonehome.listener.{MongoWriter, RecentEventsRecorder, LtsvPhoneHomeLogger}
 import com.github.cb372.phonehome.stats.MongoStatsRepository
 import com.mongodb.casbah.{MongoDB, MongoClientURI, MongoClient}
@@ -14,9 +15,13 @@ class ScalatraBootstrap extends LifeCycle {
 
   val recentEventsRecorder = new RecentEventsRecorder(100)
 
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
+
   val mongoDb = createMongoDB()
   val mongoWriter = new MongoWriter(mongoDb)
   val mongoStatsRepository = new MongoStatsRepository(mongoDb)
+  val mongoEventRepository = new MongoEventRepository(mongoDb)
 
   val ltsvLogger = new LtsvPhoneHomeLogger
 

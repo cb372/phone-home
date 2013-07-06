@@ -15,8 +15,6 @@ class LtsvPhoneHomeLogger extends PhoneHomeEventListener with LtsvBuilder {
   val messagesLogger =  LoggerFactory.getLogger("messages")
   val timingsLogger =  LoggerFactory.getLogger("timings")
 
-  import DefaultLtsvFormats._
-
   def onError(event: Received[ErrorEvent]) {
     errorsLogger.info(toLtsv(event))
   }

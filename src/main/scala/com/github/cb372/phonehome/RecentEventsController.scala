@@ -1,6 +1,5 @@
 package com.github.cb372.phonehome
 
-import model._
 import listener._
 
 import org.slf4j.LoggerFactory

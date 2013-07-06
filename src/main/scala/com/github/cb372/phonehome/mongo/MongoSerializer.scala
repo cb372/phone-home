@@ -15,16 +15,22 @@ trait MongoSerializer[T] {
   def toDBObject(t: T): DBObject
 }
 
-object DefaultMongoSerializers {
+object MongoSerializer extends DefaultMongoSerializers
 
-  implicit def receivedSer[T : MongoSerializer](received: Received[T]): MongoSerializer[Received[T]] = new MongoSerializer[Received[T]] {
-    def toDBObject(t: Received[T]) =
-      MongoDBObject(
-        "time" -> received.time,
-        "remoteHost" -> received.remoteHost,
-        "event" -> implicitly[MongoSerializer[T]].toDBObject(received.event)
-      )
-  }
+private[mongo] trait DefaultMongoSerializers {
+
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
+
+  implicit def receivedSer[T : MongoSerializer]: MongoSerializer[Received[T]] =
+    new MongoSerializer[Received[T]] {
+      def toDBObject(received: Received[T]) =
+        MongoDBObject(
+          "time" -> received.time,
+          "remoteHost" -> received.remoteHost,
+          "event" -> implicitly[MongoSerializer[T]].toDBObject(received.event)
+        )
+    }
 
   implicit object ErrorSer extends MongoSerializer[Error] {
     def toDBObject(error: Error) = {

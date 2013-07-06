@@ -52,6 +52,8 @@ case class TimingEvent(override val app: String,
 case class Received[T](id: Option[String], time: DateTime, remoteHost: String, event: T)
 
 object Received {
+  def randomId = List.fill(10)(util.Random.nextPrintableChar()).mkString
+
   def apply[T](remoteHost: String, event: T): Received[T] =
-    Received(Some(List.fill(10)(util.Random.nextPrintableChar()).mkString), new DateTime(), remoteHost, event)
+    Received(Some(randomId), new DateTime(), remoteHost, event)
 }

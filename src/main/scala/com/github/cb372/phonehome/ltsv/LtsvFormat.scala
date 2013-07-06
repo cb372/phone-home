@@ -11,7 +11,9 @@ trait LtsvFormat[T] {
   def appendLtsv(t: T, sb: StringBuilder): Unit
 }
 
-object DefaultLtsvFormats {
+object LtsvFormat extends DefaultLtsvFormats
+
+private[ltsv] trait DefaultLtsvFormats {
   private def appendFixedFields(e: Event, sb: StringBuilder) {
     sb.append(s"app:${e.app}\turl:${e.url}\tuserAgent:${e.userAgent}\t")
   }
