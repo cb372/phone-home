@@ -3,7 +3,7 @@ package com.github.cb372.phonehome
 class RootController extends PhonehomeServerStack {
 
   get("/") {
-    redirect("/recent")
+    redirect("/stats")
   }
 
 }
